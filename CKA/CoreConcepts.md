@@ -1,17 +1,21 @@
+# Kubernetes Core Concepts
 Container/Cluster/Pod/Node : https://medium.com/faun/understanding-nodes-pods-containers-and-clusters-778dbd56ade8
 
-KUBERNETES :- The purpose of Kubernetes is to host your applications in the form of containers in an automated fashion
+## KUBERNETES :- 
+The purpose of Kubernetes is to host your applications in the form of containers in an automated fashion
 			  so that you can easily deploy as many instances of your application as required and easily enable communication
 			  between different services within your application.
 			  
 			  The Kubernetes cluster consists of a set of nodes which may be physical or virtual, on-premise or
 			  on cloud that host applications in the form of containers.
 
-MASTER NODE : The master node is responsible for managing the Kubernetes cluster. Storing information regarding the different nodes 
+## MASTER NODE : 
+The master node is responsible for managing the Kubernetes cluster. Storing information regarding the different nodes 
 			  planning which containers goes where, monitoring the nodes and containers on them etc. 
 			  The Master node does all of these using a set of components together known as the control plane components.
 			  
-	--> ETCD Cluster : stores info about cluster. Etcd is a database that stores information in a key-value format.
+###	 --> ETCD Cluster : 
+	stores info about cluster. Etcd is a database that stores information in a key-value format.
 					   When you run ETCD it starts a service that listens on Port 2379 by default. The ETCD datastore stores information 
 					   regarding the cluster such as the nodes, pods, configs, secrets, accounts, roles, bindings and others.
 					   Every information you see when you run the kubectl get command is from the ETCD server. Every change you make to your cluster, 
@@ -24,20 +28,23 @@ MASTER NODE : The master node is responsible for managing the Kubernetes cluster
 								If you setup your cluster using kubeadm then kubeadm deploys the ETCD server for you as a POD in 
 								the kube-system namespace. 
 	
-	--> Kube API : Responsible for Orchestration of services.
+###		--> Kube API : 
+Responsible for Orchestration of services.
 					The kube-apiserver is at the center of all the different tasks that needs to be performed to make a change in the cluster.
 					To summarize, the kube-api server is responsible for Authenticating and validating requests, retrieving and 
 					updating data in ETCD data store, in fact, kube-api server is the only component that interacts directly with the etcd datastore.
 					The other components such as the scheduler, kube-controller-manager & kubelet uses the API server 
 					to perform updates in the cluster in their respective areas.
 	
-	--> kube Scheduler : Responsible for Scheduling applications or containers or nodes.
+###		--> kube Scheduler : 
+Responsible for Scheduling applications or containers or nodes.
 						 A scheduler identifies the right node to place a container based on the containers, Resource requirements, 
 						 the worker nodes capacity or any other policies or constraints such as tents and tolerations or node affinity rules 
 						 that are on them.
 
 
-	--> Controller Manager : controllers take care of diffrent functions.
+###		--> Controller Manager : 
+controllers take care of diffrent functions.
 									A controller is a process that continuously monitors the state of various components within the system 
 								and works towards bringing the whole system to the desired functioning state.
 								For example the node controller is responsible for monitoring the status of the nodes and taking necessary
@@ -58,8 +65,9 @@ MASTER NODE : The master node is responsible for managing the Kubernetes cluster
 								known as kubernetes controller manager. When you install the kubernetes controller manager 
 								the different controllers get installed as well.
 	
-WORKER NODES :
-	--> Kubelet : Listens instructions from kubeAPI server and manages containers.
+## WORKER NODES :
+###		--> Kubelet : 
+Listens instructions from kubeAPI server and manages containers.
 					A kubelet is an agent that runs on each node in a cluster. It listens for instructions from the kube-api server and 
 					deploys or destroys containers on the nodes as required. The kube-api server periodically fetches status reports from the 
 					kubelet to monitor the state of nodes and containers on them.
@@ -73,12 +81,13 @@ WORKER NODES :
 					Now that's the difference from the other components. You must always manually install the kubelet on your worker nodes. 
 					Download the installer, extract it and run it as a service.
 					
-	--> Kube-Proxy : Communication between worker nodes are enabled by component that runs on the worker node known as the Kube-proxy service. 
+###		--> Kube-Proxy : 
+Communication between worker nodes are enabled by component that runs on the worker node known as the Kube-proxy service. 
 					 The Kube-proxy service ensures that the necessary rules are in place on the worker nodes to allow the 
 					 containers running on them to reach each other.
 					 
 
-Commands :
+##	Commands :
 	--> How to create pods :- kubectl run nginx --image nginx
 								It first creates a POD automatically and deploys an instance of the nginx docker image.
 								In this case the nginx image, is downloaded from the docker hub repository.
@@ -90,7 +99,7 @@ Commands :
 	--> 
 
 Creating a pod using YAML file. 
-
+```yaml
 Pod-Definition.yml
 	apiversion: v1
 	kind: pod
@@ -101,14 +110,15 @@ Pod-Definition.yml
 	specs:
 		containers:
 			- name: nginx 
-			  image:nginx
+			  image: nginx
+```
 -> To launch pod using yaml file:- kubectl create -f <filename>.yml 
 -> To apply changes when we edited the file :- kubectl apply -f <filename>.yml
 -> Automatically applies changes after edit :- kubectl edit pod <podname>
 -> creates a yaml file without launching a pod :- kubectl run <name> --image=<imageName> --dry-run=client -o yaml > <filename>.yml
 
 Creates a Replication controller :-
-
+```yaml
 rc-Definition.yml
 	apiversion: v1
 	kind: ReplicationController
@@ -128,13 +138,13 @@ rc-Definition.yml
 			- name: nginx 
 			  image:nginx	
 	replicas:3
-
+```
 -> To launch replication controller :- kubectl create -f <filename>.yml 
 
 Creates Replica Set :-
 
 replicaset-definition.yml
-
+```yaml
 apiversion: apps/v1
 	kind: Replicaset
 	metadata:
@@ -156,7 +166,7 @@ apiversion: apps/v1
 	selector:
 		matchLabels:
 			type: front-end
-
+```
 -> To launch replicationset :- kubectl create -f <filename>.yml
 -> To increase no of replicas :- 
 		Increase by updating the file replicaset definition file:- kubectl replace -f <filename>.yml
@@ -170,7 +180,7 @@ apiversion: apps/v1
 --> To see all the created objects at once :- kubectl get all
 
 
-NameSpaces :-
+## NameSpaces :-
 	--> To view pods in other namespace :- kubectl get pods --namespace=<namespace name>
 	--> To create objects in other namespaces :- kubectl create -f <filename> --namespace=<nameSpaceName>
 	--> To create namespace from yaml file :- kubectl create -f <filename>
@@ -180,8 +190,8 @@ NameSpaces :-
 	--> To connect to database in own namespace :- kubectl connect db-service
 	--> To connect to database in other namespace :- kubectl connect db-service.<nameSpaceName>.svc.cluster.local
 	
-NOTE :- You can set resource quota by creating resource quota yaml file
-
+#### NOTE :- You can set resource quota by creating resource quota yaml file
+```yaml
 Example file of resourcequota.yml
 version: v1
 kind: Resourcequota
@@ -195,9 +205,9 @@ specs:
 		request.memory: 5Gi
 		limit.cpu: "10"
 		limit.memory: 10Gi
+```
 
-
-Services: 
+## Services: 
 		Services enable communication between various components within and outside of the application. 
 		Kubernetes services helps us connect applications together with other applications or users.
 		
@@ -219,7 +229,7 @@ Services:
 			load across the different web servers in your front end tier.
 
 Example file of nodeport service services.yml
-
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -233,11 +243,11 @@ spec:
 	selctor:
 		app: myapp
 		type: front-end
-		
+```
 --> To get all services with running in system :- kubectl get services.
 
 Example file of clusterIP service services.yml
-
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -250,8 +260,8 @@ spec:
 	selctor:
 		app: myapp
 		type: back-end
-
-NOTE: If you dont specify the type by default it takes ClusterIP.
+```
+#### NOTE: If you dont specify the type by default it takes ClusterIP.
 
 
 --> To change the image of runnnig deployment :- kubectl set image deployment nginx nginx=nginx:1.18
