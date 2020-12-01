@@ -143,13 +143,12 @@ metadata:
     app: myapp
 specs:
   containers:
-    - name: nginx
-      image: nginx
+  - name: nginx
+    image: nginx
 ```
 
 **Replication controller definition file :**
 ```yaml
-rc-Definition.yml
 apiversion: v1
 kind: ReplicationController
 metadata:
@@ -258,11 +257,11 @@ metadata:
   namespace: Dev
 specs:
   hard:
-	pods: "10"
-	request.cpu: "4"
-	request.memory: 5Gi
-	limit.cpu: "10"
-	limit.memory: 10Gi
+   pods: "10"
+   request.cpu: "4"
+   request.memory: 5Gi
+   limit.cpu: "10"
+   limit.memory: 10Gi
 ```
 <br>
 
