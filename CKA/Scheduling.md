@@ -1,66 +1,50 @@
-Manual Scheduling :
-					How exactly does a scheduler work in the backend. Let's start with a simple pod definition file. Every POD has a field called 
-					NodeName that, by default, is not set. You don’t typically specify this field when you create the manifest file, 
-					Kubernetes adds it automtically.The scheduler goes through all the pods and looks for those that do not have this property set.
-					Those are the candidates for scheduling. It then identifies the right node for the POD, by running the scheduling algorithm.
-					Once identified it schedules the POD on the Node by setting the node Name property to the name of the node by creating a 
-					binding object. So if there is no scheduler to monitor and schedule nodes what happens? The pods continue to be in a pending state.
-					So what can you do about it. You can manually assign pods to node yourself. Well without a scheduler, the easiest way 
-					to schedule a pod is to simply set the node name field to the name of the node in your pod specification while creating the POD.
-					The pod then gets assigned to the specified node. You can only specify the node name at creation time.
-					What if the pod is already created and you want to assign the pod to a node? Kubernetes won’t allow you to modify 
-					the node Name property of a pod. So another way to assign a note to an existing pod is to create a binding object 
-					and send a post request to the pod binding API thus mimicking what the actual scheduler does. In the binding object you specify
-					a target node with the name of the node. Then send a post request to the pods binding API with the data set 
-					to the binding object in a JSON format. So you must convert the YAML file into its equivalent JSON format.
+## **Manual Scheduling :**
+How exactly does a scheduler work in the backend. Let's start with a simple pod definition file. Every POD has a field called NodeName that, by default, is not set. You don’t typically specify this field when you create the manifest file, 
+Kubernetes adds it automtically.The scheduler goes through all the pods and looks for those that do not have this property set.
+Those are the candidates for scheduling. 
 
-Example file of Binding object Pod-bind-definition.yml
+It then identifies the right node for the POD, by running the scheduling algorithm. Once identified it schedules the POD on the Node by setting the node Name property to the name of the node by creating a bindingobject. So if there is no scheduler to monitor and schedule nodes what happens? The pods continue to bein a pending state. So what can you do about it. You can manually assign pods to node yourself. Well without a scheduler, the easiest way to schedule a pod is to simply set the node name field to the name of the node in your pod specification while creating the POD. The pod then gets assigned to the specified node. You can only specify the node name at creation time.
 
+What if the pod is already created and you want to assign the pod to a node? Kubernetes won’t allow you to modify the node Name property of a pod. So another way to assign a note to an existing pod is to create a bindingobject and send a post request to the pod binding API thus mimicking what the actual scheduler does. In the bindingobject you specify a target node with the name of the node. Then send a post request to the pods binding API with the data set to the binding object in a JSON format. So you must convert the YAML file into its equivalent JSON format.
+
+**Example file of Binding object Pod-bind-definition.yml**
+```yaml
 apiVersion: v1
 kind: Binding
-emtadata:
-	name: nginx
+metadata:
+  name: nginx
 target:
-	apiVersion: v1
-	kind: Node
-	name: node02
+  apiVersion: v1
+  kind: Node
+  name: node02
+```
 	
-	
-Labels and Selectors:
-			 How are labels and selectors used in Kubernetes? We have created a lot of different types of Objects in Kuberentes. 
-			 Pods, Services, ReplicaSets and Deployments. etc. For Kubernetes, all of these are different objects. Over time you may end up having 
-			 hundreds or thousands of these objects in your cluster. Then you will need a way to filter and view different objects by 
-			 different categories such as to group objects by their type or view objects by application or by their functionality whatever it may be.
-			 You can group and select objects using labels and selectors for each object attach labels as per your needs, like app, function etc.
-			 Then while selecting specify a condition to filter specific objects. For example app == App1. So how exactly do you specify labels in 
-			 kubernetes.In a pod-definition file, under metadata, create a section called labels. Under that add the labels in a key value format.
-			 You can add as many labels as you like. Once the pod is created, to select the pod with the labels use the	kubectl get pods command
-			 along with the selector option, and specify the condition like app=App1. Now this is one use case of labels and selectors. 
-			 Kubernetes objects use labels and selectors internally to connect different objects together. For example to create a replicaset 
-			 consisting of 3 different pods, we first label the pod definition and use selector in a replicaset to group the pods .
-			 In the replica-set set definition file.
+## **Labels and Selectors :**
+How are labels and selectors used in Kubernetes? We have created a lot of different types of Objects in Kuberentes. Pods, Services, ReplicaSets and Deployments. etc. For Kubernetes, all of these are different objects. Over time you may end up having hundreds or thousands of these objects in your cluster. Then you will need a way to filter and view different objects by different categories such as to group objects by their type or view objects by application or by their functionality whatever it may be. You can group and select objects using labels and selectors for each object attach labels as per your needs, like app, function etc.
 
-			exaample of using selector :- kubectl get all --selector env=prod,bu=finance,tier=frontend
+Then while selecting specify a condition to filter specific objects. For example app == App1. So how exactly do you specify labels in kubernetes. In a pod-definition file, under metadata, create a section called labels. Under that add the labels in a key value format. You can add as many labels as you like. Once the pod is created, to select the pod with the labels use the	kubectl get pods command along with the selector option, and specify the condition like app=App1. Now this is one use case of labels and selectors.
 
-Taints and Tolerations:
-			Tains and Toleration have nothing to do with security or intrusion on the Cluster. Teens and toleration are used to set 
-			restrictions on what Nodes pods can be scheduled.
-					
-					On a note let us start with a simple cluster with three worker notes the nodes are named one two and three.
-			We also have a set of pods that are to be deployed on these notes. Let's call them A B C and D.  Now let us assume that we have 
-			dedicated resources on Node 1 for a particular use case or application so we would like only those parts that belong to this 
-			application to be placed on Node 1. First we prevent all parts from being placed on the Node by placing a taint on the Node.
-			Paths have no toleration which means unless specified otherwise none of the parts can tolerate any taint. So in this case 
-			none of the parts can be placed on Node 1 as none of them can tolerate the team. this solves half of our requirement 
-			no unwanted parts are going to be placed on this note. The other half is to enable certain parts to be placed on this note.
-			For this we must specify which parts are tolerant to this particular attempt. In our case we would like to allow 
-			only Part D to be placed on this note so we add a toleration to Part D.Part D is now tolerant to blue so when the scheduler tries to place this part on Node 1 it goes through
-			Node 1 can now only accept parts that can tolerate the taint.
+Kubernetes objects use labels and selectors internally to connect different objects together. For example to create a replicaset consisting of 3 different pods, we first label the pod definition and use selector in a replicaset to group the pods in the replica-set set definition file.
 
-		Example of taint:- kubectl taint nodes <nodeName> key=value:taint-efect
-			NOTE:-	taint-efect can be NoSchedule Or PreferNoSchedule or NoExecute
+**Example of using selector :** 
+```
+kubectl get all --selector env=prod,bu=finance,tier=frontend
+```
+
+## **Taints and Tolerations :**
+Tains and Toleration have nothing to do with security or intrusion on the Cluster. Taints and toleration are used to set 
+restrictions on what Nodes pods can be scheduled.
+		
+On a Node let us start with a simple cluster with three worker nodes, the nodes are named `one`, `two` and `three`. We also have a set of pods that are to be deployed on these nodes. Let's call them `A B C` and `D`.  Now let us assume that we have dedicated resources on `Node 1` for a particular use case or application so we would like only those pods that belong to this  application to be placed on Node 1. First we prevent all pods from being placed on the Node by placing a taint on the Node. Pods have no toleration which means unless specified otherwise none of the pods can tolerate any taint. So in this case none of the pods can be placed on `Node 1` as none of them can tolerate the taint. this solves half of our requirement no unwanted pods are going to be placed on this node. The other half is to enable certain pods to be placed on this node. For this we must specify which pods are tolerant to this particular attempt. In our case we would like to allow only `Pod D` to be placed on this node so we add a toleration to `Pod D`. `Pod D` is now tolerant to taint so when thes cheduler tries to place this pod on `Node 1` it goes through. `Node 1` can now only accept pods that can tolerate the taint.
+
+**Example of Taint :** 
+```
+kubectl taint nodes <nodeName> key=value:taint-efect
+```
+**NOTE :** taint-efect can be NoSchedule Or PreferNoSchedule or NoExecute
 				
-Example of tolerations in pod file Pod-Definition.yml
+**Example of tolerations in pod file Pod-Definition.yml**
+```yaml
 apiVersion:
 kind: pod
 metadata:
@@ -74,36 +58,19 @@ spec:
 		operator: "Equal"
 		value: "blue"
 		effect: "NoSchedule"
-		
-Note: Taints are applied on nodes and Tolerations are applied to pods.
+```
+**Note :** Taints are applied on nodes and Tolerations are applied to pods.
 
 
 
-NodeSelctors: 
+**NodeSelctors :** 
 Let us start with a simple example.
+You have a three node cluster of which two are smaller nodes with lower hardware resources and one of them is a larger node configured with higher resources you have different kinds of workloads running in your cluster. You would like to dedicate the data processing workloads that require higher horsepower to the larger node as that is the only node that will not run out of resources in case the job demands extra resources.
 
-You have a three node cluster of which two are smaller nodes with lower hardware resources and one of
+However, in the current default setup, any pods can go to any nodes. So Pod C in this case may very well end up on nodes two or three which is not desired. To solve this we can set a limitation on the pods so that they only run on particular nodes.
+There are two ways to do this. The first is using Node selectors which is the simple and easier method.
 
-them is a larger node configured with higher resources you have different kinds of workloads running
-
-in your cluster.
-
-You would like to dedicate the data processing workloads that require higher horsepower to the larger
-
-node as that is the only node that will not run out of resources in case the job demands extra resources.
-
-However, in the current default setup, any pods can go to any nodes.
-
-So Pod C in this case may very well end up on nodes two or three which is not desired. To solve this
-
-we can set a limitation on the pods so that they only run on particular nodes.
-
-There are two ways to do this.
-
-The first is using Node selectors which is the simple and easier method.
-
-
-Example file of pod with nodeSelector 
+**Example file of pod with nodeSelector :**
 pod-definition.yml
 apiVersion:
 kind: pod
@@ -122,7 +89,7 @@ Example of creating labels in nodes:- kubectl label nodes <nodeName> <labelKey>=
 
 
 
-Node affintity :
+**Node affintity :**
 For example, we would like to say something like place the pod on a large or medium node or something
 
 like place the pod on any nodes that are not small.
