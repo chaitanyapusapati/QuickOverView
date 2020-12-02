@@ -155,17 +155,17 @@ metadata:
   name: myapp-rc
   labels:
     app: myapp
-	type: front-end
+	  type: front-end
 specs:
 - template:
 	metadata:
-	  name: myapp-pod
-	  labels:
+   name: myapp-pod
+	 labels:
 		app: myapp
 	specs:
 	  containers:
 	  - name: nginx 
-		image: nginx	
+		  image: nginx	
 replicas: 3
 ```
 
@@ -177,21 +177,21 @@ metadata:
   name: myapp-replicaset
   labels:
     app: myapp
-	type: front-end
+	  type: front-end
 specs:
 - template:
 	metadata:
 	  name: myapp-pod
 	  labels:
-		app: myapp
+		  app: myapp
 	  specs:
 	    containers:
-		- name: nginx 
-		  image: nginx	
+		  - name: nginx 
+		    image: nginx	
 replicas: 3
 selector:
   matchLabels:
-	type: front-end
+	  type: front-end
 ```
 
 **Increasing Replicas :**  
@@ -283,21 +283,21 @@ metadata:
   name: myapp-deployment
   labels:
     app: myapp
-	type: front-end
+	  type: front-end
 specs:
 - template:
 	metadata:
 	  name: myapp-pod
 	  labels:
-		app: myapp
+		  app: myapp
 	  specs:
 	    containers:
-		- name: nginx 
-		  image: nginx	
+		  - name: nginx 
+		    image: nginx	
 replicas: 3
 selector:
   matchLabels:
-	type: front-end
+	  type: front-end
 ```
 
 **View deployments :**
@@ -342,8 +342,8 @@ spec:
   type: NodePort
   ports:
   -	targetPort: 80
-	port: 80
-	nodePort: 30008
+	  port: 80
+	  nodePort: 30008
 selctor:
   app: myapp
   type: front-end
@@ -358,10 +358,10 @@ spec:
   type: ClusterIP
   ports:
   -	targetPort: 80
-	port: 80
+	  port: 80
 selctor:
-	app: myapp
-	type: back-end
+ app: myapp
+ type: back-end
 ```
 **View all services running in the system :**
 ```
