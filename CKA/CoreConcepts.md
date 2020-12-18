@@ -69,65 +69,70 @@ The Kube-proxy service ensures that the necessary rules are in place on the work
 ## **Basic Commands :**
 **To create pods :**
 ```
-kubectl run nginx --image nginx
+$ kubectl run nginx --image nginx
 ```
 -> It first creates a POD automatically and deploys an instance of the image downloaded using runtime engine.<br>
 -> In this case the nginx image, downloaded from the docker hub repository.
 
+**To Delete a Pod**
+```
+$ kubectl delete <resource_name> <object_name>
+$ kubectl delete pod <pod_name>
+```
 **list of PODs :**   
 ```
-kubectl get pods
+$ kubectl get pods
 ```	
 **Long list of PODs :**  
 ```
-kubectl get pods -o wide
+$ kubectl get pods -o wide
 ```	
 **All objects :**  
 ```
-kubectl get all 
+$ kubectl get all 
 ```
 -> To see all object create at once.
 
 **POD Details :**  
 ```
-kubectl describe pod <podname> 
+$ kubectl describe pod <podname> 
 ```
 **Resource Details :**  
 ```
-kubectl explain <resourceName> 
+$ kubectl explain <resourceName> 
 ```
 -> To view the details about a resource type
 
 **Create a resource using yaml file :**   
 ```
-kubectl create -f <fileName>.yml
+$ kubectl create -f <fileName>.yml
 ```	
 **Apply command :**   
 ```
-kubectl apply -f <fileName>
+$ kubectl apply -f <fileName>
 ```	
 -> To apply changes when we edit an object file, it automatically checks the changes and applies it to the pods if needed by deleting and re-creating pods.<br>
 -> Checks whether a object with that file exists and if not, creates a new object.
 
 **Edit Command :**   
 ```
-kubectl edit <resourceName> <objectName>
-kubectl edit pod <podName>
-kubectl edit deployment <deploymentName>
+$ kubectl edit <resourceName> <objectName>
+$ kubectl edit pod <podName>
+$ kubectl edit deployment <deploymentName>
 ```	
 -> To edit a object definition file and automatically apply changes to the object.<br>
 -> **Note :** There are restrictions on what are allowed to change in definition since the object is running but, a `temp` file is created and stored with the changes that are not allowed to apply unless we delete and re-create the object.
 
 **Alias :**  
 ```
-kubectl alias <shortcut>='<Actual_Command>'
-kubectl alias k='kubectl' 
+ $ alias <shortcut>='<Actual_Command>'
+ $ alias k='kubectl' 
 ```
 -> To create shortcuts of commands
 
 **Creating a Yaml file :**   
 ```
-kubectl run <name> --image=<imageName> --dry-run=client -o yaml > <filename>.yml
+$ kubectl run <name> --image=<imageName> --dry-run=client -o yaml > <filename>.yml
 ```	
 -> Creates a yaml file but doesn't launch a object. You have to launch it using *Create* or *Apply* command.
 <br>
@@ -149,120 +154,80 @@ specs:
 
 **Replication controller definition file :**
 ```yaml
-apiversion: v1
+apiVersion: v1
 kind: ReplicationController
 metadata:
   name: myapp-rc
   labels:
     app: myapp
-	  type: front-end
-specs:
-- template:
-	metadata:
-   name: myapp-pod
-	 labels:
-		app: myapp
-	specs:
-	  containers:
-	  - name: nginx 
-		  image: nginx	
-replicas: 3
+    type: front-end
+spec:
+ template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+     containers:
+     - name: nginx-container
+       image: nginx
+ replicas: 3
 ```
+**To Create the replication controller :**
+ ```
+ $ kubectl create -f rc-definition.yaml
+ ```
+ **To list all the replication controllers :**
+ ```
+ $ kubectl get replicationcontroller
+ ```
 
+## ReplicaSets ensures that desired number of PODs always run
 **Replication Set definition file :**
 ```yaml
-apiversion: apps/v1
-kind: Replicaset
+apiVersion: apps/v1
+kind: ReplicaSet
 metadata:
   name: myapp-replicaset
   labels:
     app: myapp
-	  type: front-end
-specs:
-- template:
-	metadata:
-	  name: myapp-pod
-	  labels:
-		  app: myapp
-	  specs:
-	    containers:
-		  - name: nginx 
-		    image: nginx	
-replicas: 3
-selector:
-  matchLabels:
-	  type: front-end
+    type: front-end
+spec:
+ template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+     containers:
+     - name: nginx-container
+       image: nginx
+ replicas: 3
+ selector:
+   matchLabels:
+    type: front-end
 ```
-
+**To get Replicasets :**
+```
+$ kubectl get replicasets
+```
 **Increasing Replicas :**  
 ```
-kubectl replace -f <filename>.yml
+$ kubectl replace -f <filename>.yml
 ```	
 -> Increase by updating the replicas in definition file.
 
 **Increasing Replicas using `scale` command :**   
 ```
-kubectl scale --replicas=6 -f <filename>.yml
-kubectl scale --replicas=6 replicaset <Name specified in replicaset definition file>
+$ kubectl scale --replicas=6 replicaset <Replicaset Name>
+```
+```
+$ kubectl scale --replicas=6 -f <filename>.yml
 ```	
 -> **Note :** Using *scale* command with filename does increase replicas but doesn't increase the set no in definition file.
 
-<br>
-
-## **NameSpaces :**  
-**Create NameSpace :**
-```
-kubectl create namespace <nameSpaceName>
-kubectl create -f <nameSpace Definition file>
-```
-**Create Object in a particular NameSpace :**
-```
-kubectl create -f <filename> --namespace=<nameSpaceName>
-```	
-**Change in to particular NameSpace :**
-```
-kubectl config set-context $(kubectl config current-context) --namespace=<nameSpaceName>
-```	
-**view the current NameSpace :**
-```
-kubectl config current-context
-```	
-**View Pods in all NameSpaces :**
-```
-kubectl get pods --all-namespaces
-```	
-**Get Pods in particular Namespace :**
-```
-kubectl get pods --namespace=<namespace name>
-```
-**Connect to database in own NameSpace :**
-```
-kubectl connect <db-ServiceName>
-kubectl connect db-service
-```
-**Connect to database in diffrent NameSpace :**
-```
-kubectl connect db-service.<nameSpaceName>.svc.cluster.local
-```
-
-## **Resource Quota :**
- Every Node has set of resources which are by used by pods that run on that Node. You can set resource quota by creating resource quota definition file.
-
- **Resource Quota definition file**
-```yaml
-version: v1
-kind: Resourcequota
-metadata:
-  name: compute-quota
-  namespace: Dev
-specs:
-  hard:
-   pods: "10"
-   request.cpu: "4"
-   request.memory: 5Gi
-   limit.cpu: "10"
-   limit.memory: 10Gi
-```
 <br>
 
 ## **Deployments :**
@@ -277,40 +242,105 @@ The replicasets ultimately create pods, so if you run the `kubectl get pods` com
 
 **Deployments definition file :**
 ```yaml
-apiversion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myapp-deployment
   labels:
     app: myapp
-	  type: front-end
-specs:
-- template:
-	metadata:
-	  name: myapp-pod
-	  labels:
-		  app: myapp
-	  specs:
-	    containers:
-		  - name: nginx 
-		    image: nginx	
-replicas: 3
-selector:
-  matchLabels:
-	  type: front-end
+    type: front-end
+spec:
+ template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+     containers:
+     - name: nginx-container
+       image: nginx
+ replicas: 3
+ selector:
+   matchLabels:
+    type: front-end
 ```
 
 **View deployments :**
 ```
-kubectl get deployments
+$ kubectl get deployments
 ```
 **Change the image of runnnig deployment**
 ```
-kubectl set image deployment nginx nginx=nginx:1.18
+$ kubectl set image deployment nginx nginx=nginx:1.18
 ```
 **Expose deployment :**
 ```
-kubectl expose deployment nginx --port 80
+$ kubectl expose deployment nginx --port 80
+```
+<br>
+
+## **NameSpaces :**  
+**Create NameSpace :**
+```
+$ kubectl create namespace <nameSpaceName>
+$ kubectl create -f <nameSpace Definition file>
+```
+**NameSpace definition file**
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+```
+**Create Object in a particular NameSpace :**
+```
+$ kubectl create -f <filename> --namespace=<nameSpaceName>
+```	
+**Change in to particular NameSpace :**
+```
+$ kubectl config set-context $(kubectl config current-context) --namespace=<nameSpaceName>
+```	
+**view the current NameSpace :**
+```
+$ kubectl config current-context
+```	
+**View Pods in all NameSpaces :**
+```
+$ kubectl get pods --all-namespaces
+```	
+**Get Pods in particular Namespace :**
+```
+$ kubectl get pods --namespace=<namespace_name>
+$ kubectl get pods -n=<namespace_name>
+```
+**Connect to database in own NameSpace :**
+```
+$ kubectl connect <db-ServiceName>
+$ kubectl connect db-service
+```
+**Connect to database in diffrent NameSpace :**
+```
+$ kubectl connect db-service.<nameSpaceName>.svc.cluster.local
+```
+
+## **Resource Quota :**
+ Every Node has set of resources which are by used by pods that run on that Node. You can set resource quota by creating resource quota definition file.
+
+ **Resource Quota definition file**
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi
+    limits.cpu: "10"
+    limits.memory: 10Gi
 ```
 <br>
 
@@ -337,33 +367,41 @@ It provisions a load balancer for our service in supported cloud providers. This
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp-service
+ name: myapp-service
 spec:
-  type: NodePort
-  ports:
-  -	targetPort: 80
-	  port: 80
-	  nodePort: 30008
-selctor:
-  app: myapp
-  type: front-end
+ types: NodePort
+ ports:
+ - targetPort: 80
+   port: 80
+   nodePort: 30008
+ selector:
+   app: myapp
+   type: front-end
 ```
 **Cluster IP Service definition file :**
 ```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: back-end
+ name: back-end
 spec:
-  type: ClusterIP
-  ports:
-  -	targetPort: 80
-	  port: 80
-selctor:
- app: myapp
- type: back-end
+ types: ClusterIP
+ ports:
+ - targetPort: 80
+   port: 80
+ selector:
+   app: myapp
+   type: back-end
 ```
 **View all services running in the system :**
 ```
-kubectl get services
+$ kubectl get services
 ``` 
+**To expose a port for a service**
+```
+$ kubectl expose pod <pod_name> --port=<port_no>
+```
+**To create a pod and a service exposing a port**
+```
+$ kubectl run <pod_name> --image=<image-name> --port=<port_name> --expose
+```
