@@ -7,7 +7,7 @@
 In this section , we will take a look at the kubernetes Architecture at high level.
 - 10,000 Feet Look at the Kubernetes Architecture
   
-  ![Kubernetes Architecture 1](images/kubernetes_architecture.PNG)
+  ![Kubernetes Architecture](images/kubernetes_architecture.PNG)
 
 K8s Reference Docs:
 - https://kubernetes.io/docs/concepts/architecture/
@@ -27,7 +27,7 @@ K8s Reference Docs:
      
    - A Key-Value Store stores information in a Key and Value format.
        
-     ![key-value 2](images/key-value.PNG)
+     ![key-value](images/key-value.png)
        
 ## Install ETCD
    - Its easy to install and get started with **`ETCD`**.
