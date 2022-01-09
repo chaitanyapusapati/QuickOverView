@@ -27,7 +27,7 @@ K8s Reference Docs:
      
    - A Key-Value Store stores information in a Key and Value format.
        
-     ![key-value](images/key-value.PNG)
+     ![key-value 2](images/key-value.PNG)
        
 ## Install ETCD
    - Its easy to install and get started with **`ETCD`**.
