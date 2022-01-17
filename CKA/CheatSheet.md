@@ -571,3 +571,346 @@ In this section, we will take a look at the below
 #### K8s Reference Docs:
 - https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 - https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/
+
+<br><br><br>
+
+# Deployments
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/deployments-3/)
+
+In this section, we will take a look at kubernetes deployments
+
+#### Deployment is a kubernetes object. 
+  
+ ![deployment](images/deployment.png)
+  
+#### How do we create deployment?
+
+```
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: myapp-deployment
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+     template:
+        metadata:
+          name: myapp-pod
+          labels:
+            app: myapp
+            type: front-end
+        spec:
+         containers:
+         - name: nginx-container
+           image: nginx
+     replicas: 3
+     selector:
+       matchLabels:
+        type: front-end
+ ```
+- Once the file is ready, create the deployment using deployment definition file
+  ```
+  $ kubectl create -f deployment-definition.yaml
+  ```
+- To see the created deployment
+  ```
+  $ kubectl get deployment
+  ```
+- The deployment automatically creates a **`ReplicaSet`**. To see the replicasets
+  ```
+  $ kubectl get replicaset
+  ```
+- The replicasets ultimately creates **`PODs`**. To see the PODs
+  ```
+  $ kubectl get pods
+  ```
+    
+  ![deployment1](images/deployment1.png)
+  
+- To see the all objects at once
+  ```
+  $ kubectl get all
+  ```
+  ![deployment2](images/deployment2.png)
+  
+K8s Reference Docs:
+- https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+- https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/
+- https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
+
+<br><br><br>
+
+# Namespaces
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/namespaces/)
+  
+In this section, we will take a look at **`Namespaces`**
+
+So far in this course we have created **`Objects`** such as **`PODs`**, **`Deployments`** and **`Services`** in our cluster. Whatever we have been doing we have been doing in a **`NAMESPACE`**.
+- This namespace is the **`default`** namespace in kubernetes. It is automatically created when kubernetes is setup initially.
+
+  ![ns](images/ns.png)
+ 
+- You can create your own namespaces as well.
+
+  ![ns3](images/ns3.png)
+  
+- To list the pods in default namespace
+  ```
+  $ kubectl get pods
+  ```
+- To list the pods in another namespace. Use **`kubectl get pods`** command along with the **`--namespace`** flag or argument.
+  ```
+  $ kubectl get pods --namespace=kube-system
+  ```
+  ![ns8](images/ns8.png)
+  
+- Here we have a pod definition file, when we create a pod with pod-definition file, the pod is created in the default namespace.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+     app: myapp
+     type: front-end
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+ ```
+  ```
+  $ kubectl create -f pod-definition.yaml
+  ```
+- To create the pod with the pod-definition file in another namespace, use the **`--namespace`** option.
+  ```
+  $ kubectl create -f pod-definition.yaml --namespace=dev
+  ```
+  ![ns9](images/ns9.png)
+
+- If you want to make sure that this pod gets you created in the **`dev`** env all the time, even if you don't specify in the command line, you can move the **`--namespace`** definition into the pod-definition file.
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  namespace: dev
+  labels:
+     app: myapp
+     type: front-end
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+ ```
+  
+  ![ns10](images/ns10.png)
+  
+- To create a new namespace, create a namespace definition as shown below and then run **`kubectl create`**
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+```
+
+  ```
+  $ kubectl create -f namespace-dev.yaml
+  ```
+  Another way to create a namespace
+  ```
+  $ kubectl create namespace dev
+  ```
+  ![ns11](images/ns11.png)
+  
+- By default, we will be in a **`default`** namespace. To switch to a particular namespace permenently run the below command.
+  ```
+  $ kubectl config set-context $(kubectl config current-context) --namespace=dev
+  ```
+- To view pods in all namespaces
+  ```
+  $ kubectl get pods --all-namespaces
+  ```
+  ![ns12](images/ns12.png)
+  
+- To limit resources in a namespace, create a resource quota. To create one start with **`ResourceQuota`** definition file.
+```
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi
+    limits.cpu: "10"
+    limits.memory: 10Gi
+```
+  ```
+  $ kubectl create -f compute-quota.yaml
+  ```
+  ![ns13](images/ns13.png)
+  
+K8s Reference Docs:
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+- https://kubernetes.io/docs/tasks/administer-cluster/namespaces-walkthrough/
+- https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
+- https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/
+- https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/
+  
+<br><br><br>
+
+# Kubernetes Services
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/services-3/)
+  
+In this section we will take a look at **`services`** in kubernetes
+
+## Services
+- Kubernetes Services enables communication between various components within and outside of the application.
+
+  ![srv1](images/srv1.png)
+  
+#### Let's look at some other aspects of networking
+
+## External Communication
+
+- How do we as an **`external user`** access the **`web page`**?
+
+  - From the node (Able to reach the application as expected)
+  
+    ![srv2](images/srv2.png)
+    
+  - From outside world (This should be our expectation, without something in the middle it will not reach the application)
+  
+    ![srv3](images/srv3.png)
+   
+    
+ ## Service Types
+ 
+ #### There are 3 types of service types in kubernetes
+ 
+   ![srv-types](images/srv-types.png)
+ 
+ 1. NodePort
+    - Where the service makes an internal POD accessible on a POD on the NODE.
+      ```
+      apiVersion: v1
+      kind: Service
+      metadata:
+       name: myapp-service
+      spec:
+       types: NodePort
+       ports:
+       - targetPort: 80
+         port: 80
+         nodePort: 30008
+      ```
+     ![srvnp](images/srvnp.png)
+      
+      #### To connect the service to the pod
+      ```
+      apiVersion: v1
+      kind: Service
+      metadata:
+       name: myapp-service
+      spec:
+       types: NodePort
+       ports:
+       - targetPort: 80
+         port: 80
+         nodePort: 30008
+       selector:
+         app: myapp
+         type: front-end
+       ```
+
+    ![srvnp1](images/srvnp1.png)
+      
+      #### To create the service
+      ```
+      $ kubectl create -f service-definition.yaml
+      ```
+      
+      #### To list the services
+      ```
+      $ kubectl get services
+      ```
+      
+      #### To access the application from CLI instead of web browser
+      ```
+      $ curl http://192.168.1.2:30008
+      ```
+      
+      ![srvnp2](images/srvnp2.png)
+
+      #### A service with multiple pods
+      
+      ![srvnp3](images/srvnp3.png)
+      
+      #### When Pods are distributed across multiple nodes
+     
+      ![srvnp4](images/srvnp4.png)
+     
+            
+ 1. ClusterIP
+    - In this case the service creates a **`Virtual IP`** inside the cluster to enable communication between different services such as a set of frontend servers to a set of backend servers.
+    
+ 1. LoadBalancer
+    - Where the service provisions a **`loadbalancer`** for our application in supported cloud providers.
+    
+K8s Reference Docs:
+- https://kubernetes.io/docs/concepts/services-networking/service/
+- https://kubernetes.io/docs/tutorials/kubernetes-basics/expose/expose-intro/
+
+<br><br><br>
+
+# Kubernetes Services - ClusterIP
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/services-cluster-ip-2/)
+  
+In this section we will take a look at **`services - ClusterIP`** in kubernetes
+         
+## ClusterIP
+- In this case the service creates a **`Virtual IP`** inside the cluster to enable communication between different services such as a set of frontend servers to a set of backend servers.
+    
+    ![srvc1](images/srvc1.png)
+    
+#### What is a right way to establish connectivity between these services or tiers  
+- A kubernetes service can help us group the pods together and provide a single interface to access the pod in a group.
+
+  ![srvc2](images/srvc2.png)
+  
+#### To create a service of type ClusterIP
+```
+apiVersion: v1
+kind: Service
+metadata:
+ name: back-end
+spec:
+ types: ClusterIP
+ ports:
+ - targetPort: 80
+   port: 80
+ selector:
+   app: myapp
+   type: back-end
+```
+```
+$ kubectl create -f service-definition.yaml
+```
+
+#### To list the services
+```
+$ kubectl get services
+```
+  ![srvc3](images/srvc3.png)
+   
+K8s Reference Docs:
+- https://kubernetes.io/docs/concepts/services-networking/service/
+- https://kubernetes.io/docs/tutorials/kubernetes-basics/expose/expose-intro/
+
+<br><br><br>
+
