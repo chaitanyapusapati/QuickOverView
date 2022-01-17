@@ -124,7 +124,7 @@ In this section, we will talk about kube-apiserver in kubernetes
 #### Kube-apiserver is the primary component in kubernetes.
 - Kube-apiserver is responsible for **`authenticating`**, **`validating`** requests, **`retrieving`** and **`Updating`** data in ETCD key-value store. In fact kube-apiserver is the only component that interacts directly to the etcd datastore. The other components such as kube-scheduler, kube-controller-manager and kubelet uses the API-Server to update in the cluster in their respective areas.
   
-  ![post](images/post.PNG)
+  ![post](images/post.png)
   
 ## Installing kube-apiserver
 
@@ -134,7 +134,7 @@ In this section, we will talk about kube-apiserver in kubernetes
     $ wget https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-apiserver
     ```
  
- ![kube-apiserver](images/kube-apiserver.PNG)
+ ![kube-apiserver](images/kube-apiserver.png)
  
 ## View kube-apiserver - Kubeadm
 - kubeadm deploys the kube-apiserver as a pod in kube-system namespace on the master node.
@@ -142,7 +142,7 @@ In this section, we will talk about kube-apiserver in kubernetes
   $ kubectl get pods -n kube-system
   ```
    
-  ![kube-apiserver1](images/kube-apiserver1.PNG)
+  ![kube-apiserver1](images/kube-apiserver1.png)
    
 ## View kube-apiserver options - Kubeadm
 - You can see the options with in the pod definition file located at **`/etc/kubernetes/manifests/kube-apiserver.yaml`**
@@ -150,7 +150,7 @@ In this section, we will talk about kube-apiserver in kubernetes
   $ cat /etc/kubernetes/manifests/kube-apiserver.yaml
   ```
   
-  ![kube-apiserver2](images/kube-apiserver2.PNG)
+  ![kube-apiserver2](images/kube-apiserver2.png)
    
 ## View kube-apiserver options - Manual
 - In a Non-kubeadm setup, you can inspect the options by viewing the kube-apiserver.service
@@ -158,13 +158,13 @@ In this section, we will talk about kube-apiserver in kubernetes
   $ cat /etc/systemd/system/kube-apiserver.service
   ```
   
-  ![kube-apiserver3](images/kube-apiserver3.PNG)
+  ![kube-apiserver3](images/kube-apiserver3.png)
    
 - You can also see the running process and affective options by listing the process on master node and searching for kube-apiserver.
   ```
   $ ps -aux | grep kube-apiserver
   ```
-  ![kube-apiserver4](images/kube-apiserver4.PNG)
+  ![kube-apiserver4](images/kube-apiserver4.png)
 
 K8s Reference Docs:
 - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
@@ -187,17 +187,17 @@ In this section, we will take a look at kube-controller-manager.
 ## Node Controller
    - Responsible for monitoring the state of the Nodes and taking necessary actions to keep the application running. 
   
-   ![node-controller](images/node-controller.PNG)
+   ![node-controller](images/node-controller.png)
    
 ## Replication Controller
    - It is responsible for monitoring the status of replicasets and ensuring that the desired number of pods are available at all time within the set.
    
-   ![replication-controller](images/replication-controller.PNG)
+   ![replication-controller](images/replication-controller.png)
    
 ## Other Controllers
    - There are many more such controllers available within kubernetes
      
-   ![other-controllers](images/other-controllers.PNG)
+   ![other-controllers](images/other-controllers.png)
    
    
   ## Installing Kube-Controller-Manager
@@ -210,34 +210,34 @@ In this section, we will take a look at kube-controller-manager.
     ```
     $ cat /etc/systemd/system/kube-controller-manager.service
     ```
-    ![kube-controller-manager](images/kube-controller-manager.PNG)
+    ![kube-controller-manager](images/kube-controller-manager.png)
     
 ## View kube-controller-manager - kubeadm
 - kubeadm deploys the kube-controller-manager as a pod in kube-system namespace
   ```
   $ kubectl get pods -n kube-system
   ```
-  ![kube-controller-manager0](images/kube-controller-manager0.PNG)
+  ![kube-controller-manager0](images/kube-controller-manager0.png)
   
 ## View kube-controller-manager options - kubeadm
 - You can see the options within the pod located at **`/etc/kubernetes/manifests/kube-controller-manager.yaml`**
   ```
   $ cat /etc/kubernetes/manifests/kube-controller-manager.yaml
   ```
-  ![kube-controller-manager1](images/kube-controller-manager1.PNG)
+  ![kube-controller-manager1](images/kube-controller-manager1.png)
   
 ## View kube-controller-manager options - Manual
 - In a non-kubeadm setup, you can inspect the options by viewing the **`kube-controller-manager.service`**
   ```
   $ cat /etc/systemd/system/kube-controller-manager.service
   ```
-  ![kube-controller-manager2](images/kube-controller-manager2.PNG)
+  ![kube-controller-manager2](images/kube-controller-manager2.png)
   
 - You can also see the running process and affective options by listing the process on master node and searching for kube-controller-manager.
   ```
   $ ps -aux | grep kube-controller-manager
   ```
-  ![kube-controller-manager3](images/kube-controller-manager3.PNG)
+  ![kube-controller-manager3](images/kube-controller-manager3.png)
   
 K8s Reference Docs:
 - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/
@@ -253,11 +253,11 @@ In this section, we will take a look at kube-scheduler.
 #### kube-scheduler is responsible for scheduling pods on nodes.  
 - The kube-scheduler is only responsible for deciding which pod goes on which node. It doesn't actually place the pod on the nodes, that's the job of the **`kubelet`**.
 
-  ![kube-scheduler1](images/kube-scheduler1.PNG)
+  ![kube-scheduler1](images/kube-scheduler1.png)
   
 #### Why do you need a Scheduler?
 
-  ![kube-scheduler2](images/kube-scheduler2.PNG)
+  ![kube-scheduler2](images/kube-scheduler2.png)
     
 ## Install kube-scheduler - Manual
 - Download the kubescheduler binary from the kubernetes release pages [kube-scheduler](https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-scheduler). For example: To download kube-scheduler v1.13.0, Run the below command.
@@ -267,7 +267,7 @@ In this section, we will take a look at kube-scheduler.
 - Extract it
 - Run it as a service
 
-  ![kube-scheduler3](images/kube-scheduler3.PNG)
+  ![kube-scheduler3](images/kube-scheduler3.png)
   
 ## View kube-scheduler options - kubeadm
 - If you set it up with kubeadm tool, kubeadm tool will deploy the kube-scheduler as pod in kube-system namespace on master node.
@@ -278,13 +278,13 @@ In this section, we will take a look at kube-scheduler.
   ```
   $ cat /etc/kubernetes/manifests/kube-scheduler.yaml
   ```
-  ![kube-scheduler4](images/kube-scheduler4.PNG)
+  ![kube-scheduler4](images/kube-scheduler4.png)
   
 - You can also see the running process and affective options by listing the process on master node and searching for kube-apiserver.
   ``` 
   $ ps -aux | grep kube-scheduler
   ```
-  ![kube-scheduler5](images/kube-scheduler5.PNG)
+  ![kube-scheduler5](images/kube-scheduler5.png)
   
   K8s Reference Docs:
   - https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/
@@ -302,7 +302,7 @@ In this section we will take a look at kubelet.
 #### Kubelet is the sole point of contact for the kubernetes cluster
 - The **`kubelet`** will create the pods on the nodes, the scheduler only decides which pods goes where.
 
-  ![kubelet](images/kubelet.PNG)
+  ![kubelet](images/kubelet.png)
   
 ## Install kubelet
 - Kubeadm does not deploy kubelet by default. You must manually download and install it.
@@ -313,7 +313,7 @@ In this section we will take a look at kubelet.
 - Extract it
 - Run it as a service
 
-  ![kubelet1](images/kubelet1.PNG)
+  ![kubelet1](images/kubelet1.png)
   
 ## View kubelet options
 - You can also see the running process and affective options by listing the process on worker node and searching for kubelet.
@@ -321,7 +321,7 @@ In this section we will take a look at kubelet.
   $ ps -aux |grep kubelet
   ```
   
-  ![kubelet2](images/kubelet2.PNG)
+  ![kubelet2](images/kubelet2.png)
 
 K8s Reference Docs:
 - https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
@@ -338,7 +338,7 @@ In this section, we will take a look at kube-proxy.
 Within Kubernetes Cluster, every pod can reach every other pod, this is accomplish by deploying a pod networking cluster to the cluster. 
 - Kube-Proxy is a process that runs on each node in the kubernetes cluster.
   
-  ![kube-proxy](images/kube-proxy.PNG)
+  ![kube-proxy](images/kube-proxy.png)
   
 ## Install kube-proxy - Manual
 - Download the kube-proxy binary from the kubernetes release pages [kube-proxy](https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-proxy). For example: To download kube-proxy v1.13.0, Run the below command.
@@ -348,14 +348,14 @@ Within Kubernetes Cluster, every pod can reach every other pod, this is accompli
 - Extract it
 - Run it as a service
 
-  ![kube-proxy1](images/kube-proxy1.PNG)
+  ![kube-proxy1](images/kube-proxy1.png)
 
 ## View kube-proxy options - kubeadm
 - If you set it up with kubeadm tool, kubeadm tool will deploy the kube-proxy as pod in kube-system namespace. In fact it is deployed as a daemonset on master node.
   ```
   $ kubectl get pods -n kube-system
   ```
-  ![kube-proxy2](images/kube-proxy2.PNG)
+  ![kube-proxy2](images/kube-proxy2.png)
   
   
 K8s Reference Docs:
@@ -374,24 +374,24 @@ In this section, we will take a look at PODS.
 
 #### Kubernetes doesn't deploy containers directly on the worker node.
 
-  ![pod](images/pod.PNG)
+  ![pod](images/pod.png)
   
 #### Here is a single node kubernetes cluster with single instance of your application running in a single docker container encapsulated in the pod.
 
-![pod1](images/pod1.PNG)
+![pod1](images/pod1.png)
 
 #### Pod will have a one-to-one relationship with containers running your application.
 
-  ![pod2](images/pod2.PNG)
+  ![pod2](images/pod2.png)
   
 ## Multi-Container PODs
 - A single pod can have multiple containers except for the fact that they are usually not multiple containers of the **`same kind`**.
   
-  ![pod3](images/pod3.PNG)
+  ![pod3](images/pod3.png)
   
 ## Docker Example (Docker Link)
   
-  ![pod4](images/pod4.PNG)
+  ![pod4](images/pod4.png)
   
 ## How to deploy pods?
 Lets now take a look to create a nginx pod using **`kubectl`**.
@@ -406,7 +406,7 @@ Lets now take a look to create a nginx pod using **`kubectl`**.
   $ kubectl get pods
   ```
 
- ![kubectl](images/kubectl.PNG)
+ ![kubectl](images/kubectl.png)
 
 K8s Reference Docs:
 - https://kubernetes.io/docs/concepts/workloads/pods/pod/
