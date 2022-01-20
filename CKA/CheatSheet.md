@@ -979,3 +979,360 @@ K8s Reference Docs:
     
 <br><br><br>
 
+# Labels and Selectors
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/labels-and-selectors/)
+  
+In this section, we will take a look at **`Labels and Selectors`**
+
+#### Labels and Selectors are standard methods to group things together.
+  
+#### Labels are properties attached to each item.
+
+  ![labels-ckc](images/labels-ckc.png)
+  
+#### Selectors help you to filter these items
+ 
+  ![sl](images/sl.png)
+  
+How are labels and selectors are used in kubernetes?
+- We have created different types of objects in kubernetes such as **`PODs`**, **`ReplicaSets`**, **`Deployments`** etc.
+  
+How do you specify labels?
+   ```
+    apiVersion: v1
+    kind: Pod
+    metadata:
+     name: simple-webapp
+     labels:
+       app: App1
+       function: Front-end
+    spec:
+     containers:
+     - name: simple-webapp
+       image: simple-webapp
+       ports:
+       - containerPort: 8080
+   ```
+ ![lpod](images/lpod.png)
+ 
+Once the pod is created, to select the pod with labels run the below command
+```
+$ kubectl get pods --selector app=App1
+```
+
+Kubernetes uses labels to connect different objects together
+   ```
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: simple-webapp
+      labels:
+        app: App1
+        function: Front-end
+    spec:
+     replicas: 3
+     selector:
+       matchLabels:
+        app: App1
+    template:
+      metadata:
+        labels:
+          app: App1
+          function: Front-end
+      spec:
+        containers:
+        - name: simple-webapp
+          image: simple-webapp   
+   ```
+
+  ![lrs](images/lrs.png)
+
+For services
+
+      apiVersion: v1
+      kind: Service
+      metadata:
+       name: my-service
+      spec:
+       selector:
+         app: App1
+       ports:
+       - protocol: TCP
+         port: 80
+         targetPort: 9376 
+
+  ![lrs1](images/lrs1.png)
+  
+## Annotations
+- While labels and selectors are used to group objects, annotations are used to record other details for informative purpose.
+
+    ```
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+      name: simple-webapp
+      labels:
+        app: App1
+        function: Front-end
+      annotations:
+         buildversion: 1.34
+    spec:
+     replicas: 3
+     selector:
+       matchLabels:
+        app: App1
+    template:
+      metadata:
+        labels:
+          app: App1
+          function: Front-end
+      spec:
+        containers:
+        - name: simple-webapp
+          image: simple-webapp   
+    ```
+  ![annotations](images/annotations.png)
+
+K8s Reference Docs:
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+
+<br><br><br>
+
+# Taints and Tolerations
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/taints-and-tolerations-2/)
+  
+In this section, we will take a look at taints and tolerations.
+- Pod to node relationship and how you can restrict what pods are placed on what nodes.
+
+#### Taints and Tolerations are used to set restrictions on what pods can be scheduled on a node. 
+- Only pods which are tolerant to the particular taint on a node will get scheduled on that node.
+
+  ![tandt](images/tandt.png)
+  
+## Taints
+- Use **`kubectl taint nodes`** command to taint a node.
+
+  Syntax
+  ```
+  $ kubectl taint nodes <node-name> key=value:taint-effect
+  ```
+ 
+  Example
+  ```
+  $ kubectl taint nodes node1 app=blue:NoSchedule
+  ```
+  
+- The taint effect defines what would happen to the pods if they do not tolerate the taint.
+- There are 3 taint effects
+  - **`NoSchedule`**
+  - **`PreferNoSchedule`**
+  - **`NoExecute`**
+  
+  ![tn](images/tn.png)
+  
+## Tolerations
+   - Tolerations are added to pods by adding a **`tolerations`** section in pod definition.
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+      name: myapp-pod
+     spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+      tolerations:
+      - key: "app"
+        operator: "Equal"
+        value: "blue"
+        effect: "NoSchedule"
+     ```
+    
+  ![tp](images/tp.png)
+    
+
+#### Taints and Tolerations do not tell the pod to go to a particular node. Instead, they tell the node to only accept pods with certain tolerations.
+- To see this taint, run the below command
+  ```
+  $ kubectl describe node kubemaster |grep Taint
+  ```
+ 
+ ![tntm](images/tntm.png)
+  
+     
+#### K8s Reference Docs
+- https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+
+<br><br><br>
+
+# Node Selectors
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/node-selectors/)
+
+In this section, we will take a look at Node Selectors in Kubernetes
+
+#### We add new property called Node Selector to the spec section and specify the label.
+- The scheduler uses these labels to match and identify the right node to place the pods on.
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   nodeSelector:
+    size: Large
+  ```
+![nsel](images/nsel.png)
+  
+- To label nodes
+
+  Syntax
+  ```
+  $ kubectl label nodes <node-name> <label-key>=<label-value>
+  ```
+  Example
+  ```
+  $ kubectl label nodes node-1 size=Large
+  ```
+  
+![ln](images/ln.png)
+  
+- To create a pod definition
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   nodeSelector:
+    size: Large
+  ```
+  ```
+  $ kubectl create -f pod-definition.yml
+  ```
+  
+![nsel](images/nsel.png)
+  
+## Node Selector - Limitations
+- We used a single label and selector to achieve our goal here. But what if our requirement is much more complex.
+  
+![nsl](images/nsl.png)
+ 
+- For this we have **`Node Affinity and Anti Affinity`**
+  
+#### K8s Reference Docs
+- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
+
+<br><br><br>
+
+# Node Affinity
+  - Take me to the [Video Tutorial](https://kodekloud.com/topic/node-affinity-2/)
+  
+In this section, we will talk about "Node Affinity" feature in kubernetes.
+
+#### The primary feature of Node Affinity is to ensure that the pods are hosted on particular nodes.
+- With **`Node Selectors`** we cannot provide the advance expressions.
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   nodeSelector:
+    size: Large
+  ```
+  ![ns-old](images/ns-old.png)
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   affinity:
+     nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: size
+              operator: In
+              values: 
+              - Large
+              - Medium
+  ```
+  ![na](images/na.png)
+  
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   affinity:
+     nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: size
+              operator: NotIn
+              values: 
+              - Small
+  ```
+  ![na1](images/na1.png)
+  
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: myapp-pod
+  spec:
+   containers:
+   - name: data-processor
+     image: data-processor
+   affinity:
+     nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: size
+              operator: Exists
+  ```
+  
+  ![na2](images/na2.png)
+  
+
+## Node Affinity Types
+- Available
+  - requiredDuringSchedulingIgnoredDuringExecution
+  - preferredDuringSchedulingIgnoredDuringExecution
+- Planned
+  - requiredDuringSchedulingRequriedDuringExecution
+  - preferredDuringSchedulingRequiredDuringExecution
+  
+  ![nat](images/nat.png)
+  
+## Node Affinity Types States
+
+  ![nats](images/nats.png)
+  
+  ![nats1](images/nats1.png)
+  
+#### K8s Reference Docs
+- https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
+- https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
+
+<br><br><br>
+

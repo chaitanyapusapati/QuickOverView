@@ -726,3 +726,300 @@ Solutions to Practice Test - Manual Scheduling
 
  <br><br><br>
 
+# Practice Test - Labels and Selectors
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-labels-and-selectors/)
+  
+Solutions to Practice Test - Labels and Selectors
+- Run the command 'kubectl get pods --selector env=dev'
+  
+  <details>
+
+  ```
+  $ kubectl get pods --selector env=dev
+  ```
+  </details>
+
+- Run the command 'kubectl get pods --selector bu=finance'
+
+  <details>
+
+  ```
+  $ kubectl get pods --selector bu=finance
+  ```
+  </details>
+
+- Run the command 'kubectl get all --selector env=prod'
+
+  <details>
+
+  ```
+  $ kubectl get all --selector env=prod
+  ```
+  </details>
+
+- Run the command 'kubectl get all --selector env=prod,bu=finance,tier=frontend'
+  
+  <details>
+
+  ```
+  $ kubectl get all --selector env=prod,bu=finance,tier=frontend
+  ```
+  </details>
+
+- Set the labels on the pod definition template to frontend
+
+  <details>
+
+  ```
+  $ vi replicaset-definition.yaml
+  $ kubectl create -f replicaset-definition.yaml
+  ```
+  </details>
+
+  <br><br><br>
+
+# Practice Test - Taints and Tolerations
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-taints-and-tolerations/)
+  
+Solutions to the Practice Test - Taints and Tolerations
+
+- Run the command 'kubectl get nodes' and count the number of nodes.
+  
+  <details>
+
+  ```
+  $ kubectl get nodes
+  ```
+  </details>
+
+- Run the command 'kubectl describe node node01' and see the taint property
+
+  <details>
+
+  ```
+  $ kubectl describe node node01
+  ```
+  </details>
+
+- Run the command 'kubectl taint nodes node01 spray=mortein:NoSchedule'.
+
+  <details>
+
+  ```
+  $ kubectl taint nodes node01 spray=mortein:NoSchedule
+  ```
+  </details>
+
+- Answer file at /var/answers/mosquito.yaml
+
+  <details>
+
+  ```
+  master $ cat /var/answers/mosquito.yaml
+  apiVersion: v1
+  kind: Pod
+   metadata:
+    name: mosquito
+  spec:
+   containers:
+   - image: nginx
+     name: mosquito
+  ```
+  ```
+  $ kubectl create -f /var/answers/mosquito.yaml
+  ```
+  </details>
+
+- Run the command 'kubectl get pods' and see the state
+
+  <details>
+
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+
+- Why do you think the pod is in a pending state?
+
+  <details>
+
+  ```
+  POD Mosquito cannot tolerate taint Mortein
+  ```
+  </details>
+
+- Answer file at /var/answers/bee.yaml
+
+  <details>
+
+  ```
+  master $ cat /var/answers/bee.yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+   name: bee
+  spec:
+   containers:
+   - image: nginx
+     name: bee
+   tolerations:
+   - key: spray
+     value: mortein
+     effect: NoSchedule
+     operator: Equal
+  ```
+  ```
+  $ kubectl create -f /var/answers/bee.yaml
+  ```
+  </details>
+
+- Notice the 'bee' pod was scheduled on node node01 despite the taint.
+
+- Run the command 'kubectl describe node master' and see the taint property
+  
+  <details>
+
+  ```
+  $ kubectl describe node master
+  ```
+  </details>
+
+- Run the command 'kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-'.
+  
+  <details>
+
+  ```
+  $ kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-
+  ```
+  </details>
+
+- Run the command 'kubectl get pods' and see the state
+
+  <details>
+
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+
+- Run the command 'kubectl get pods -o wide' and look at the Node column
+ 
+  <details>
+
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - Node Affinity
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-node-affinity-2/)
+  
+Solutions to practice test - node affinity
+
+- Run the command 'kubectl describe node node01' and count the number of labels under **`Labels Section`**.
+  
+  <details>
+
+  ```
+  $ kubectl describe node node01
+  ```
+  </details>
+
+- Run the command 'kubectl describe node node01' and see the label section
+  
+  <details>
+
+  ```
+  $ kubectl describe node node01
+  ```
+  </details>
+
+- Run the command 'kubectl label node node01 color=blue'.
+
+  <details>
+
+  ```
+  $ kubectl label node node01 color=blue
+  ```
+  </details>
+
+- Run the below commands
+
+  <details>
+
+  ```
+  $ kubectl create deployment blue --image=nginx
+  $ kubectl scale deployment blue --replicas=6
+  ```
+  </details>
+
+- Check if master and node01 have any taints on them that will prevent the pods to be scheduled on them. If there are no taints, the pods can be scheduled on either node.
+  
+  <details>
+
+  ```
+  $ kubectl describe nodes|grep -i taints
+  $ kubectl get pods -o wide
+  ```
+  </details>
+
+- Answer file at /var/answers/blue-deployment.yaml
+  
+  <details>
+
+  ```
+  $ kubectl edit deployment blue
+  ```
+  </details>
+
+  Add the below under the template.spec section
+  
+  <details>
+
+  ```
+  affinity:
+      nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+   ```
+   </details>
+
+ - Run the command 'kubectl get pods -o wide' and see the Node column
+   
+   <details>
+
+   ```
+   $ kubectl get pods -o wide
+   ```
+   </details>
+
+ - Answer file at /var/answers/red-deployment.yaml
+   Add the below under the template.spec section
+   
+   <details>
+
+   ```
+   affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+   ```
+   ```
+   $ kubectl create -f red-deployment.yaml
+   ```
+   ```
+   $ kubectl get pods -o wide
+   ```
+   </details>
+   
+  <br><br><br>
