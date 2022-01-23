@@ -1107,3 +1107,197 @@ Solutions to practice test - resource limtis
   </details>
 
 <br><br><br>
+
+# Practice Test - DaemonSets
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-daemonsets/)
+  
+Solutions to practice test daemonsets
+- Run the command kubectl get daemonsets --all-namespaces
+  
+  <details>
+
+  ```
+  $ kubectl get daemonsets --all-namespaces
+  ```
+  </details>
+
+- Run the command kubectl get daemonsets --all-namespaces
+
+  <details>
+
+  ```
+  $ kubectl get daemonsets --all-namespaces
+  ```
+  </details>
+
+- Run the command kubectl get all --all-namespaces and identify the types
+
+  <details>
+
+  ```
+  $ kubectl get all --all-namespaces
+  ```
+  </details>
+
+- Run the command kubectl describe daemonset kube-proxy --namespace=kube-system
+
+  <details>
+
+  ```
+  $ kubectl describe daemonset kube-proxy --namespace=kube-system
+  ```
+  </details>
+
+- Run the command kubectl describe daemonset kube-flannel-ds-amd64 --namespace=kube-system
+
+  <details>
+
+  ```
+  $ kubectl describe daemonset kube-flannel-ds-amd64 --namespace=kube-system
+  ```
+  </details>
+    
+- Create a daemonset
+
+  <details>
+
+  ```
+  $ vi ds.yaml
+  ```
+
+  ```
+  apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    name: elasticsearch
+    namespace: kube-system
+    labels:
+      k8s-app: fluentd-logging
+  spec:
+    selector:
+      matchLabels:
+        name: elasticsearch
+    template:
+      metadata:
+        labels:
+          name: elasticsearch
+      spec:
+        tolerations:
+        # this toleration is to have the daemonset runnable on master nodes
+        # remove it if your masters can't run pods
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        containers:
+        - name: elasticsearch
+          image: k8s.gcr.io/fluentd-elasticsearch:1.20
+  ```
+  </details>
+
+- To create the daemonset and list the daemonsets and pods
+
+  <details>
+
+  ```
+  $ kubectl create -f ds.yaml
+  $ kubectl get ds -n kube-system
+  $ kubectl get pod -n kube-system|grep elasticsearch
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - Static Pods
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-static-pods/)
+  
+Solutions to the practice test - static pods
+- Run the command kubectl get pods --all-namespaces and look for those with -master appended in the name
+  
+  <details>
+
+  ```
+  $ kubectl get pods --all-namespaces
+  ```
+  </details>
+
+- Which of the below components is NOT deployed as a static pod?
+
+  <details>
+
+  ```
+  $ kubectl get pods --all-namespaces
+  ```
+  </details>
+
+- Which of the below components is NOT deployed as a static POD?
+
+  <details>
+
+  ```
+  $ kubectl get pods --all-namespaces
+  ```
+  </details>
+
+- Run the kubectl get pods --all-namespaces -o wide
+
+  <details>
+
+  ```
+  $ kubectl get pods --all-namespaces -o wide
+  ```
+  </details>
+
+- Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then checkin the config file for staticPdPath.
+
+  <details>
+
+  ```
+  $ ps -aux | grep kubelet
+  ```
+  </details>
+
+- Count the number of files under /etc/kubernetes/manifests
+
+- Check the image defined in the /etc/kubernetes/manifests/kube-apiserver.yaml manifest file.
+
+- Create a pod definition file in the manifests folder. Use command kubectl run --restart=Never --image=busybox static-busybox --dry-run -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+  
+  <details>
+
+  ```
+  $ kubectl run --restart=Never --image=busybox static-busybox --dry-run=client -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+  ```
+  </details>
+
+- Simply edit the static pod definition file and save it 
+
+  <details>
+
+  ```
+  /etc/kubernetes/manifests/static-busybox.yaml
+  ```
+  </details>
+
+  OR
+  
+  <details>
+
+  ```
+  Run the command with updated image tag:
+  kubectl run --restart=Never --image=busybox:1.28.4 static-busybox--dry-run=client -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+  ```
+  </details>
+
+- Identify which node the static pod is created on, ssh to the node and delete the pod definition file. If you don't know theIP of the node, run the kubectl get nodes -o wide command and identify the IP. Then SSH to the node using that IP. For static pod manifest path look at the file /var/lib/kubelet/config.yaml on node01
+
+  <details>
+
+  ```
+  $ kubectl get pods -o wide
+  $ kubectl get nodes -o wide
+  $ ssh <ip address of pod>
+  $ grep staticPodPath /var/lib/kubelet/config.yaml
+  $ node01 $ rm -rf /etc/just-to-mess-with-you/greenbox.yaml
+  ```
+  </details>
+
+<br><br><br>

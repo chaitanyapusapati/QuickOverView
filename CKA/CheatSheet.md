@@ -1436,3 +1436,137 @@ In this section we will take a look at Resource Limits
 - https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   
 <br><br><br>
+
+# DaemonSets
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/daemonsets/)
+
+In this section, we will take a look at DaemonSets.
+
+#### DaemonSets are like replicasets, as it helps in to deploy multiple instances of pod. But it runs one copy of your pod on each node in your cluster.
+  
+  ![ds](images/ds.png)
+  
+## DaemonSets - UseCases
+
+  ![ds-uc](images/ds-uc.png)
+  
+  ![ds-uc-kp](images/ds-uc-kp.png)
+  
+  ![ds-ucn](images/ds-ucn.png)
+  
+## DaemonSets - Definition
+- Creating a DaemonSet is similar to the ReplicaSet creation process.
+- For DaemonSets, we start with apiVersion, kind as **`DaemonSets`** instead of **`ReplicaSet`**, metadata and spec. 
+  ```
+  apiVersion: apps/v1
+  kind: Replicaset
+  metadata:
+    name: monitoring-daemon
+    labels:
+      app: nginx
+  spec:
+    selector:
+      matchLabels:
+        app: monitoring-agent
+    template:
+      metadata:
+       labels:
+         app: monitoring-agent
+      spec:
+        containers:
+        - name: monitoring-agent
+          image: monitoring-agent
+  ```
+  
+  ```
+  apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    name: monitoring-daemon
+    labels:
+      app: nginx
+  spec:
+    selector:
+      matchLabels:
+        app: monitoring-agent
+    template:
+      metadata:
+       labels:
+         app: monitoring-agent
+      spec:
+        containers:
+        - name: monitoring-agent
+          image: monitoring-agent
+  ```
+  ![dsd](images/dsd.png)
+  
+- To create a daemonset from a definition file
+  ```
+  $ kubectl create -f daemon-set-definition.yaml
+  ```
+
+## View DaemonSets
+- To list daemonsets
+  ```
+  $ kubectl get daemonsets
+  ```
+- For more details of the daemonsets
+  ```
+  $ kubectl describe daemonsets monitoring-daemon
+  ```
+  ![ds1](images/ds1.png)
+  
+## How DaemonSets Works
+
+  ![ds2](images/ds2.png)
+
+#### K8s Reference Docs
+- https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/#writing-a-daemonset-spec
+
+<br><br><br>
+
+# Static Pods 
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/static-pods/)
+  
+In this section, we will take a look at Static Pods
+
+#### How do you provide a pod definition file to the kubelet without a kube-apiserver?
+- You can configure the kubelet to read the pod definition files from a directory on the server designated to store information about pods.
+
+## Configure Static Pod
+- The designated directory can be any directory on the host and the location of that directory is passed in to the kubelet as an option while running the service.
+  - The option is named as **`--pod-manifest-path`**.
+  
+  ![sp](images/sp.png)
+  
+## Another way to configure static pod 
+- Instead of specifying the option directly in the **`kubelet.service`** file, you could provide a path to another config file using the config option, and define the directory path as staticPodPath in the file.
+
+  ![sp1](images/sp1.png)
+
+## View the static pods
+- To view the static pods
+  ```
+  $ docker ps
+  ```
+  ![sp2](images/sp2.png)
+
+#### The kubelet can create both kinds of pods - the static pods and the ones from the api server at the same time.
+
+  ![sp3](images/sp3.png)
+
+## Static Pods - Use Case
+
+  ![sp4](images/sp4.png)
+  
+  ![sp5](images/sp5.png)
+  
+## Static Pods vs DaemonSets
+
+   ![spvsds](images/spvsds.png)
+  
+
+#### K8s Reference Docs
+- https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
+
+<br><br><br>
