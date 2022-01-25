@@ -1301,3 +1301,169 @@ Solutions to the practice test - static pods
   </details>
 
 <br><br><br>
+
+# Practice Test - Multiple Schedulers
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-multiple-schedulers/)
+  
+Solutions to practice test - multiple schedulers
+- Run the command 'kubectl get pods --namespace=kube-system'
+  
+  <details>
+
+  ```
+  $ kubectl get pods --namespace=kube-system
+  ```
+  </details>
+
+- Run the command 'kubectl describe pod kube-scheduler-master --namespace=kube-system'
+
+  <details>
+
+  ```
+  $ kubectl describe pod kube-scheduler-master --namespace=kube-system
+  ```
+  </details>
+
+- Use the file at /etc/kubernetes/manifests/kube-scheduler.yaml to create your own scheduler. View answer file at /var/answers
+
+  <details>
+
+  ```
+  $ kubectl create -f my-scheduler.yaml
+  ```
+  </details>
+
+- Set schedulerName property on pod specification to the name of the new scheduler. File is located at /root/nginx-pod.yaml
+  
+  <details>
+
+  ```
+  master $ grep schedulerName /root/nginx-pod.yaml
+  schedulerName: my-scheduler
+  
+  $ kubectl create -f /root/nginx-pod.yaml
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - Monitor Cluster Components
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-monitor-cluster-components/)
+  
+Solutions to practice test - monitor cluster components
+- We have deployed a few PODs running workloads. Inspect it.
+
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+  
+- Let us deploy metrics-server to monitor the PODs and Nodes. Pull the git repository for the deployment files.
+
+  <details>
+  
+  ```
+  $ git clone https://github.com/kodekloudhub/kubernetes-metrics-server.git
+  ```
+  </details>
+  
+- Run the 'kubectl create -f .' command from within the downloaded repository.
+
+  <details>
+  
+  ```
+  $ cd kubernetes-metrics-server
+  $ kubectl create -f .
+  ```
+  </details>
+    
+- Run the 'kubectl top node' command and wait for a valid output.
+
+  <details>
+  
+  ```
+  $ kubectl top node
+  ```
+  </details>
+  
+- Run the 'kubectl top node' command
+
+  <details>
+  
+  ```
+  $ kubectl top node
+  ```
+  </details>
+  
+- Run the 'kubectl top node' command
+  
+  <details>
+  
+  ```
+  $ kubectl top node
+  ```
+  </details>
+  
+- Run the 'kubectl top pod' command
+  
+  <details>
+  
+  ```
+  $ kubectl top pod
+  ```
+  </details>
+  
+- Run the 'kubectl top pod' command
+  
+  <details>
+  
+  ```
+  $ kubectl top pod
+  ```
+  </details>
+  
+<br><br><br>
+
+# Practice Test - Managing Application Logs
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-managing-application-logs/)
+  
+Solutions to practice test - managing application logs
+- We have deployed a POD hosting an application. Inspect it. Wait for it to start.
+
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+  
+- Inspect the logs of the POD
+  
+  <details>
+  
+  ```
+  $ kubectl logs webapp-1
+  ```
+  </details>
+  
+- We have deployed a new POD - 'webapp-2' - hosting an application. Inspect it. Wait for it to start.
+
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+  
+- Inspect the logs of the webapp in the POD
+  
+  <details>
+  
+  ```
+  $ kubectl logs webapp-2
+  ```
+  </details>
+
+<br><br><br>

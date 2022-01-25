@@ -1570,3 +1570,166 @@ In this section, we will take a look at Static Pods
 - https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/
 
 <br><br><br>
+
+# Multiple Schedulers 
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/multiple-schedulers/)
+
+In this section, we will take a look at multiple schedulers
+
+## Custom Schedulers
+- Your kubernetes cluster can schedule multiple schedulers at the same time.
+
+  ![ms](images/ms.png)
+  
+## Deploy additional scheduler
+- Download the binary
+  ```
+  $ wget https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kube-scheduler
+  ```
+  ![das](images/das.png)
+  
+## Deploy additional scheduler - kubeadm
+   
+  ![dask](images/dask.png)
+  
+  - To create a scheduler pod
+    ```
+    $ kubectl create -f my-custom-scheduler.yaml
+    ```
+  
+## View Schedulers
+- To list the scheduler pods
+  ```
+  $ kubectl get pods -n kube-system
+  ```
+
+## Use the Custom Scheduler
+- Create a pod definition file and add new section called **`schedulerName`** and specify the name of the new scheduler
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: nginx
+  spec:
+    containers:
+    - image: nginx
+      name: nginx
+    schedulerName: my-custom-scheduler
+  ```
+  ![cs](images/cs.png)
+  
+- To create a pod definition
+  ```
+  $ kubectl create -f pod-definition.yaml
+  ```
+- To list pods
+  ```
+  $ kubectl get pods
+  ```
+
+## View Events
+- To view events
+  ```
+  $ kubectl get events
+  ```
+  ![cs1](images/cs1.png)
+  
+## View Scheduler Logs
+- To view scheduler logs
+  ```
+  $ kubectl logs my-custom-scheduler -n kube-system
+  ```
+  ![cs2](images/cs2.png)
+  
+#### K8s Reference Docs
+- https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
+
+<br><br><br>
+
+# Monitor Cluster Components
+  - Take me to [Video Tutuorials](https://kodekloud.com/topic/monitor-cluster-components/)
+  
+In this section, we will take a look at monitoring kubernetes cluster
+
+#### How do you monitor resource consumption in kubernetes? or more importantly, what would you like to monitor?
+  ![mon](images/mon.png)
+ 
+## Heapster vs Metrics Server
+- Heapster is now deprecated and a slimmed down version was formed known as the **`metrics server`**.
+
+  ![hpms](images/hpms.png)
+  
+## Metrics Server
+
+  ![ms1](images/ms1.png)
+
+#### How are the metrics generated for the PODs on these nodes?
+
+  ![ca](images/ca.png)
+  
+## Metrics Server - Getting Started
+
+  ![msg](images/msg.png)
+  
+- Clone the metric server from github repo
+  ```
+  $ git clone https://github.com/kubernetes-incubator/metrics-server.git
+  ```
+- Deploy the metric server
+  ```
+  $ kubectl create -f metric-server/deploy/1.8+/
+  ```
+  
+- View the cluster performance
+  ```
+  $ kubectl top node
+  ```
+- View performance metrics of pod
+  ```
+  $ kubectl top pod
+  ```
+  
+  ![view](images/view.png)
+  
+<br><br><br>
+
+# Managing Application Logs
+  - Take me to [Video Tutorial](https://kodekloud.com/topic/managing-application-logs/)
+
+In this section, we will take a look at managing application logs
+
+#### Let us start with logging in docker
+
+![ld](images/ld.png)
+ 
+![ld1](images/ld1.png)
+ 
+#### Logs - Kubernetes
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: event-simulator-pod
+spec:
+  containers:
+  - name: event-simulator
+    image: kodekloud/event-simulator
+```
+ ![logs-k8s](images/logs-k8s.png)
+ 
+- To view the logs
+  ```
+  $ kubectl logs -f event-simulator-pod
+  ```
+- If there are multiple containers in a pod then you must specify the name of the container explicitly in the command.
+  ```
+  $ kubectl logs -f <pod-name> <container-name>
+  $ kubectl logs -f even-simulator-pod event-simulator
+  ```
+
+  ![logs1](images/logs1.png)
+  
+#### K8s Reference Docs
+- https://kubernetes.io/blog/2015/06/cluster-level-logging-with-kubernetes/
+ 
+ <br><br><br>
