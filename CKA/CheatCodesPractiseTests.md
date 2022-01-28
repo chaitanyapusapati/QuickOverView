@@ -1467,3 +1467,925 @@ Solutions to practice test - managing application logs
   </details>
 
 <br><br><br>
+
+# Practice Test - Rolling Updates and Rollback
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-rolling-updates-and-rollbacks/)
+  
+Solutions to practice test - rolling updates and rollback
+- We have deployed a simple web application. Inspect the PODs and the Services
+
+  <details>
+  
+  ```
+  $ kubectl get pods
+  $ kubectl get services
+  ```
+  </details>
+  
+- What is the current color of the web application?
+  
+  <details>
+  
+  ```
+  Access the web portal
+  ```
+  </details>
+    
+- Execute the script at /root/curl-test.sh.
+
+- Run the command 'kubectl describe deployment' and look at 'Desired Replicas'
+
+  <details>
+  
+  ```
+  $ kubectl describe deployment
+  ```
+  </details>
+  
+- Run the command 'kubectl describe deployment' and look for 'Images'
+  
+  <details>
+  
+  ```
+  $ kubectl describe deployment
+  ```
+  </details>
+  
+- Run the command 'kubectl describe deployment' and look at 'StrategyType'
+  
+  <details>
+  
+  ```
+  $ kubectl describe deployment
+  ```
+  </details>
+  
+- If you were to upgrade the application now what would happen?
+  
+  <details>
+  
+  ```
+  PODs are upgraded few at a time
+  ```
+  </details>
+  
+- Run the command 'kubectl edit deployment frontend' and modify the required feild
+  
+  <details>
+  
+  ```
+  $ kubectl edit deployment frontend
+  ```
+  </details>
+    
+- Execute the script at /root/curl-test.sh.
+
+- Look at the Max Unavailable value under RollingUpdateStrategy in deployment details
+
+  <details>
+  ```
+  $ kubectl describe deployment
+  ```
+  </details>
+  
+- Run the command 'kubectl edit deployment frontend' and modify the required field. Make sure to delete the properties of rollingUpdate as well, set at 'strategy.rollingUpdate'.
+  
+  <details>
+  
+  ```
+  $ kubectl edit deployment frontend]
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl edit deployment frontend' and modify the required feild
+
+  <details>
+  
+  ```
+  $ kubectl edit deployment frontend
+  ```
+  </details>
+  
+- Execute the script at /root/curl-test.sh.
+
+<br><br><br>
+
+# Practice Test - Commands and Arguments
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-commands-and-arguments/)
+  
+Solutions to practice test - commands and arguments
+- Run the command 'kubectl get pods' and count the number of pods.
+  
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+  
+- Run the command 'kubectl describe pod' and look for command option
+
+  <details>
+  
+  ```
+  $ kubectl describe pod
+  ```
+  </details>
+  
+- Set the command option to ['sleep', '5000']. Answer file at: /var/answers/answer-ubuntu-sleeper-2.yaml
+
+- Both sleep and 1200 should be defined as a string. Answer file at: /var/answers/answer-ubuntu-sleeper-3.yaml
+
+- Answer file at: /var/answers/answer-ubuntu-sleeper-3-2.yaml
+
+- Inspect the file 'Dockerfile' given at /root/webapp-color. What command is run at container startup?
+  
+  <details>
+  
+  ```
+  python app.py
+  ```
+  </details>
+  
+- Inspect the file 'Dockerfile2' given at /root/webapp-color. What command is run at container startup?
+
+  <details>
+  ```
+  python app.py --color red
+  ```
+  </details>
+  
+- The 'command' (entrypoint) is overridden in the pod definition. So the answer is --color green
+
+- Inspect the two files under directory 'webapp-color-3'. What command is run at container startup?
+
+  <details>
+  
+  ```
+  python app.py --color pink
+  ```
+  </details>
+  
+- Answer file located at /var/answers/answer-webapp-color-green.yaml
+
+<br><br><br>
+
+# Practice Test Env Variables
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-env-variables/)
+  
+Solutions to practice test env variables
+- Run the command 'kubectl get pods' and count the number of pods.
+  
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl describe pod' and look for ENV option
+
+  <details>
+  
+  ```
+  $ kubectl describe pod
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl describe pod' and look for ENV option
+  
+  <details>
+  
+  ```
+  $ kubectl describe pod
+  ```
+  
+  </details>
+    
+- View the web application UI by clicking on the 'Webapp Color' Tab above your terminal.
+
+- Set the environment option to APP_COLOR - green.
+  
+  <details>
+  
+  ```
+  $ kubectl get pods webapp-color -o yaml > green.yaml
+  $ kubectl delete pods webapp-color
+  Update APP_COLOR to green
+  $ kubectl create -f green.yaml
+  ```
+  
+  </details>
+  
+- View the changes to the web application UI by clicking on the 'Webapp Color' Tab above your terminal.
+
+- Run kubectl get configmaps
+  
+  <details>
+  
+  ```
+  $ kubectl get configmaps
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl describe configmaps' and look for DB_HOST option
+
+  <details>
+  
+  ```
+  $ kubectl describe configmaps
+  ```
+  
+  </details>
+  
+- Create a new ConfigMap for the 'webapp-color' POD. Use the spec given on the right.
+
+  <details>
+  
+  ```
+  $ kubectl create configmap webapp-config-map --from-literal=APP_COLOR=darkblue
+  ```
+  
+  </details>
+  
+- Set the environment option to envFrom and use configMapRef webapp-config-map.
+  
+  <details>
+  
+  ```
+  $ kubectl get pods webapp-color -o yaml > new-webapp.yaml
+  $ kubectl delete pods webapp-color
+   Update pod definition file, under spec.containers section update the below.
+  - envFrom:
+    - configMapRef:
+       name: webapp-config-map
+  ```
+  
+  </details>
+  
+  <details>
+  
+  ```
+  $ kubectl create -f new-webapp.yaml
+  ``` 
+  
+  </details>
+
+- View the changes to the web application UI by clicking on the 'Webapp Color' Tab above your terminal.
+
+<br><br><br>
+
+# Practice Test - Secrets
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-secrets/)
+
+Solutions for pracice test - Secrets
+- Run the command 'kubectl get secrets' and count the number of pods.
+  
+  <details>
+  ```
+  $ kubectl get secrets
+  ```
+  </details>
+    
+- Run the command 'kubectl get secrets' and look at the DATA field
+
+  <details>
+  ```
+  $ kubectl get secrets
+  ```
+  </details>
+  
+- Run the command 'kubectl describe secret'
+
+  <details>
+  ```
+  $ kubectl describe secret
+  ```
+  </details>
+    
+- Run the command 'kubectl describe secret'
+
+  <details>
+  ```
+  $ kubectl describe secret
+  ```
+  </details>
+  
+- We have already deployed the required pods and services. Check out the pods and services created. Check out the web application using the 'Webapp MySQL' link above your terminal, next to the Quiz Portal Link.
+
+- Run command kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DBUser=root --from-literal=DB_Password=password123
+
+  <details>
+  ```
+  $ kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+  ```
+  </details>
+  
+- Check Answer at /var/answers/answer-webapp.yaml
+
+  <details>
+  ```
+  $ kubectl get pod webapp-pod -o yaml > web.yaml
+  $ kubectl delete pod webapp-pod
+  ```
+  </details>
+  
+  Update web.yaml with secret section
+  
+  envFrom:
+  - secretRef:
+      name: db-secret
+  
+  <details>
+  ```
+  $ kubectl create -f web.yaml
+  ```
+  </details>
+  
+- View the web application to verify it can successfully connect to the database
+
+<br><br><br>
+
+# Practice Test - Multi-Container Pods
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-multi-container-pods/)
+  
+Solutions to practice test - multi-container pods
+- Identify the number of containers running in the 'red' pod.
+  
+  <details>
+  
+  ```
+  $ kubectl get pod red
+  ```
+  </details>
+  
+- Identify the name of the containers running in the 'blue' pod.
+
+  <details>
+  ```
+  $ kubectl describe pod blue
+  ```
+  </details>
+    
+- Answer file is located at /var/answers/answer-yellow.yaml
+
+  <details>
+  ```
+  $ kubectl create -f /var/answers/answer-yellow.yaml
+  ```
+  </details>
+  
+- We have deployed an application logging stack in the elastic-stack namespace. Inspect it.
+  
+  <details>
+  ```
+  $ kubectl get pods -n elastic-stack
+  ```
+  </details>
+  
+- Inspect the Kibana UI using the link above your terminal. There shouldn't be any logs for now.
+
+- Run `kubectl describe pod -n elastic-stack`
+
+  <details>
+  ```
+  $ kubectl describe pod -n elastic-stack
+  ```
+  </details>
+  
+- Run the command 'kubectl -n elastic-stack exec -it app cat /log/app.log'
+  
+  <details>
+  ```
+  $ kubectl -n elastic-stack exec -it app cat /log/app.log
+  ```
+  </details>
+  
+- Answer file is located at /var/answers/answer-app.yaml
+  
+- Inspect the Kibana UI. You should now see logs appearing in the 'Discover' section. You might have to wait for a couple of minutes for the logs to populate. You might have to create an index pattern to list the logs. If not sure check this video: https://bit.ly/2EXYdHf
+
+<br><br><br>
+
+# Practice Test - Init-Containers
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-init-containers/)
+  
+Solutions to practice test - init-containers
+- Identify the pod that has an initContainer configured.
+
+  <details>
+  ```
+  $ kubectl get pods
+  $ kubectl describe pods
+  ```
+  </details>
+  
+- What is the image used by the initContainer on the blue pod?
+  
+  <details>
+  ```
+  $ kubectl describe pods blue
+  ```
+  </details>
+    
+- Run the command kubectl describe pod blue and check the state field of the initContainer.
+
+  <details>
+  ```
+  $ kubectl describe pod blue
+  ```
+  </details>
+  
+- Check the reason field of the initContainer
+  
+  <details>
+  ```
+  $ kubectl describe pod blue
+  ```
+  </details>
+  
+- Run the command kubectl describe pod purple
+  
+  <details>
+  ```
+  $ kubectl describe pod purple
+  ```
+  </details>
+  
+- Run the kubectl describe pod purple command and look at the container state
+  
+  <details>
+  ```
+  $ kubectl describe pod purple
+  ```
+  </details>
+  
+- Check the commands used in the initContainers. The first one sleeps for 600 seconds (10 minutes) and the second one sleeps for 1200 seconds (20 minutes)
+  
+  <details>
+  ```
+  $ kubectl describe pod purple
+  ```
+  </details>
+  
+- Update the pod red to use an initContainer that uses the busybox image and sleeps for 20 seconds
+  
+  <details>
+  ```
+  $ kubectl get pod red -o yaml > red.yaml
+  $ kubectl delete pod red
+  ```
+  </details>
+  
+  Update the red.yaml with sleep 20 seconds
+  
+  <details>
+  ```
+  $ kubectl create -f red.yaml
+  ```
+  </details>
+  
+- Check the command used by the initContainer. Looks like there is a type in sleep command. Fix it, it should be **`sleep 2`** not **`sleeeep 2`**
+  
+  <details>
+  ```
+  $ kubectl describe pod orange
+  $ kubectl get pod orange -o yaml > orange.yaml
+  $ kubectl delete pod orange
+  
+  Update the orange.yaml with correct sleep command and recreate the pod
+  $ kubectl create -f orange.yaml
+  ```
+ </details>
+
+<br><br><br>
+
+# Practice Test - OS Upgrades
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-os-upgrades/)
+  
+Solutions to practice test - OS Upgrades
+- Let us explore the environment first. How many nodes do you see in the cluster?
+  
+  <details>
+  ```
+  $ kubectl get nodes
+  ```
+  </details>
+  
+- How many applications do you see hosted on the cluster?
+  
+  <details>
+  ```
+  $ kubectl get deploy
+  ```
+  </details>
+  
+- Run the command 'kubectl get pods -o wide' and get the list of nodes the pods are placed on
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- Run the command kubectl drain node01 --ignore-daemonsets
+  
+  <details>
+  ```
+  $ kubectl drain node01 --ignore-daemonsets
+  ```
+  </details>
+  
+- Run the command 'kubectl get pods -o wide' and get the list of nodes the pods are placed on
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- Run the command kubectl uncordon node01
+  
+  <details>
+  ```
+  $ kubectl uncordon node01
+  ```
+  </details>
+  
+- Run the command kubectl get pods -o wide
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- Why are there no pods on node01?
+  
+  <details>
+  ```
+  Only when new pods are created they will be scheduled
+  ```
+  </details>
+  
+- Use the command kubectl describe node master and look under taint section to check if it has any taints.
+  
+  <details>
+  ```
+  $ kubectl describe node master
+  ```
+  </details>
+  
+- Run the command kubectl drain node02 --ignore-daemonsets
+  
+  <details>
+  ```
+  $ kubectl drain node02 --ignore-daemonsets
+  ```
+  </details>
+  
+- Check the applications hosted on the node02.
+  
+  <details>
+  ```
+  node02 has a pod not part of a replicaset
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- Check the list of pods
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+    
+- What would happen to hr-app if node02 is drained forcefully?
+  
+  <details>
+  ```
+  $ kubectl drain node02 --ignore-daemonsets --force
+  hr-app will be lost forever
+  ```
+  </details>
+    
+- Run the command kubectl drain node02 --ignore-daemonsets --force
+
+  <details>
+  ```
+  $ kubectl drain node02 --ignore-daemonsets --force
+  ```
+  </details>
+  
+- Run the command kubectl cordon node03
+  
+  <details>
+  ```
+  $ kubectl cordon node03
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - Cluster Upgrade Process
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-cluster-upgrade-process/)
+  
+Solutions to practice test cluster upgrade process
+- What is the current version of the cluster?
+  
+  <details>
+  ```
+  $ kubectl get nodes
+  ```
+  </details>
+  
+- How many nodes are part of this cluster?
+  
+  <details>
+  ```
+  $ kubctl get nodes
+  ```
+  </details>
+  
+- Check what nodes the pods are hosted on.
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- Count the number of deployments
+  
+  <details>
+  ```
+  $ kubectl get deploy
+  ```
+  </details>
+  
+- Run the command kubectl get pods -o wide
+  
+  <details>
+  ```
+  $ kubectl get pods -o wide
+  ```
+  </details>
+  
+- You are tasked to upgrade the cluster. User's accessing the applications must not be impacted. And you cannot provision new VMs. What strategy would you use to upgrade the cluster?
+  
+  <details>
+  ```
+  Upgrade one node at a time while moving the workloads to the other
+  ```
+  </details>
+  
+- Run the kubeadm upgrade plan command
+  
+  <details>
+  ```
+  $ kubeadm upgrade plan
+  ```
+  </details>
+  
+- Run the kubectl drain master --ignore-daemonsets
+  
+  <details>
+  ```
+  $ kubectl drain master --ignore-daemonsets
+  ```
+  </details>
+  
+- Run the command apt install kubeadm=1.18.0-00 and then kubeadm upgrade apply v1.18.0 and then apt install kubelet=1.18.0-00 to upgrade the kubelet on the master node
+  
+  <details>
+  ```
+  $ apt install kubeadm=1.18.0-00
+  $ kubeadm upgrade apply v1.18.0 
+  $ apt install kubelet=1.18.0-00
+  ```
+  </details>
+  
+- Run the command kubectl uncordon master
+  
+  <details>
+  ```
+  $ kubectl uncordon master 
+  ```
+  </details>
+  
+- Run the command kubectl drain node01 --ignore-daemonsets
+  
+  <details>
+  ```
+  $ kubectl drain node01 --ignore-daemonsets
+  ```
+  </details>
+  
+- Run the commands: apt install kubeadm=1.18.0-00 and then kubeadm upgrade node. Finally, run apt install kubelet=1.18.0-00.
+  
+  <details>
+  ```
+  $ apt install kubeadm=1.18.0-00
+  $ kubeadm upgrade node
+  $ apt install kubelet=1.18.0-00
+  ```
+  </details>
+  
+- Run the command kubectl uncordon node01
+  
+  <details>
+  ```
+  $ kubectl uncordon node01
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - Backup and Restore Methods
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-backup-and-restore-methods/)
+  
+Solutions to practice test - Backup and Restore Methods
+- Run the kubectl get deployments command
+  
+  <details>
+  ```
+  $ kubectl get deployments
+  ```
+  </details>
+  
+- Look at the ETCD Logs using command kubectl logs etcd-master -n kube-system or check the ETCD pod kubectl describe pod etcd-master -n kube-system
+
+  <details>
+  ```
+  $ kubectl logs etcd-master -n kube-system (or)
+  $ kubectl describe pod etcd-master -n kube-system
+  ```
+  </details>
+  
+- Use the command kubectl describe pod etcd-master -n kube-system and look for --listen-client-urls
+  
+  <details>
+  ```
+  $ kubectl describe pod etcd-master -n kube-system 
+  ```
+  </details>
+    
+- Check the ETCD pod configuration kubectl describe pod etcd-master -n kube-system
+  
+  <details>
+  ```
+  $ kubectl describe pod etcd-master -n kube-system
+  ```
+  </details>
+  
+- Check the ETCD pod configuration kubectl describe pod etcd-master -n kube-system
+  
+  <details>
+  ```
+  $ kubectl describe pod etcd-master -n kube-system
+  ```
+  </details>
+  
+- Run the below command to backup etcd. View answer file at [etcd-backup-and-restore](https://github.com/mmumshad/kubernetes-the-hard-way/blob/master/practice-questions-answers/cluster-maintenance/backup-etcd/etcd-backup-and-restore.md)
+  
+  <details>
+  ```
+  $ ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/snapshot-pre-boot.db.
+  ```
+  </details>
+  
+- Wake up! We have a conference call! After the reboot the master nodes came back online, but none of our applications are accessible. Check the status of the applications on the cluster. What's wrong?
+  
+  <details>
+  ```
+  All of the above
+  ```
+  </details>
+  
+- Luckily we took a backup. Restore the original state of the cluster using the backup file. 
+  - View answer file at [etcd-backup-and-restore](https://github.com/mmumshad/kubernetes-the-hard-way/blob/master/practice-questions-answers/cluster-maintenance/backup-etcd/etcd-backup-and-restore.md#3-restore-etcd-snapshot-to-a-new-folder)
+  
+  
+
+#### Take me to [Solutions of Practice Tests - Backup and Restore](https://kodekloud.com/topic/solution-backup-and-restore/)
+
+<br><br><br>
+
+# Practice Test - View Certificates
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-view-certificate-details/)
+  
+Solutions to practice test - view certificates
+- Identify the certificate file used for the kube-api server
+  
+  <details>
+  
+  ```
+  $ cat /etc/kubernetes/manifest/kube-apiserver.yaml
+  
+  Answer: /etc/kubernetes/pki/apiserver.crt
+  ```
+  </details>
+  
+- Identify the Certificate file used to authenticate kube-apiserver as a client to ETCD Server
+  
+  <details>
+  ```
+  $ cat /etc/kubernetes/manifest/kube-apiserver.yaml
+  Answer: /etc/kubernetes/pki/apiserver-etcd-client.crt
+  ```
+  </details>
+  
+- Look for kubelet-client-key option in the file /etc/kubernetes/manifests/kube-apiserver.yaml
+  
+  <details>
+  ```
+  Answer: /etc/kubernetes/pki/apiserver-kubelet-client.key
+  ```
+  </details>
+  
+- Look for cert file option in the file /etc/kubernetes/manifests/etcd.yaml
+  
+  <details>
+  ```
+  Answer: /etc/kubernetes/pki/etcd/server.crt
+  ```
+  </details>
+  
+- Look for CA Certificate in file /etc/kubernetes/manifests/etcd.yaml
+  
+  <details>
+  ```
+  Answer: /etc/kubernetes/pki/etcd/ca.crt
+  ```
+  </details>
+  
+- Run the command openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text
+  ```
+  </details>
+  
+- Run the command openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text and look for issuer
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text 
+  ```
+  </details>
+  
+- Run the command openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text and look at Alternative Names
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text
+  ```
+  </details>
+  
+- Run the command openssl x509 -in /etc/kubernetes/pki/etcd/server.crt -text and look for Subject CN.
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/etcd/server.crt -text
+  ```
+  </details>
+  
+- Run the command openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text and check on the Expiry date.
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text
+  ```
+  </details>
+  
+- Run the command 'openssl x509 -in /etc/kubernetes/pki/ca.crt -text' and look for validity
+  
+  <details>
+  ```
+  $ openssl x509 -in /etc/kubernetes/pki/ca.crt -text
+  ```
+  </details>
+  
+- Inspect the --cert-file option in the manifests file.
+  
+  <details>
+  ```
+  $ vi /etc/kubernetes/manifests/etcd.yaml
+  ```
+  </details>
+  
+- ETCD has its own CA. The right CA must be used for the ETCD-CA file in /etc/kubernetes/manifests/kube-apiserver.yaml. 
+  
+  <details>
+  ```
+  View answer at /var/answers/kube-apiserver.yaml
+  ```
+  </details>
+
+<br><br><br>
