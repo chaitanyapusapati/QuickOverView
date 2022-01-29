@@ -2389,3 +2389,470 @@ Solutions to practice test - view certificates
   </details>
 
 <br><br><br>
+
+# Practice Test - Certificates API
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-certificates-api/)
+
+Solutions to the practice test - certificate API
+- A new member akshay joined our team. He requires access to our cluster. The Certificate Signing Request is at the /root location.
+
+  <details>
+  ```
+  $ ls -l /root
+  ```
+  </details>
+  
+- View the answer at /var/answers/akshay-csr.yaml
+  
+  <details>
+  ```
+  $ kubectl create -f /var/answers/akshay-csr.yaml
+  ```
+  </details>
+  
+- Run the command kubectl get csr
+  
+  <details>
+  ```
+  $ kubectl get csr
+  ```
+  </details>
+    
+- Run the command kubectl certificate approve akshay
+  
+  <details>
+  ```
+  $ kubectl certificate approve akshay
+  ```
+  </details>
+  
+- Run the command kubectl get csr
+  
+  <details>
+  ```
+  $ kubectl get csr
+  ```
+  </details>
+  
+- Run the command kubectl get csr and look at the Requestor column
+  
+  <details>
+  ```
+  $ kubectl get csr
+  ```
+  </details>
+  
+- The other CSR's are requested during the TLS Bootstrapping process. We will discuss more about it later in the course when we go through the TLS bootstrap section.
+
+- Run the command kubectl get csr
+  
+  <details>
+  ```
+  $ kubectl get csr
+  ```
+  </details>
+  
+- Run the command kubectl get csr agent-smith -o yaml
+  
+  <details>
+  ```
+  $ kubectl get csr agent-smith -o yaml
+  ```
+  </details>
+  
+- Run the command kubectl certificate deny agent-smith
+  
+  <details>
+  ```
+  $ kubectl certificate deny agent-smith
+  ```
+  </details>
+  
+- Run the command kubectl delete csr agent-smith
+  
+  <details>
+  ```
+  $ kubectl delete csr agent-smith
+  ```
+  </details>
+
+<br><br><br>
+
+# Practice Test - KubeConfig
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-kubeconfig/)
+ 
+Solutions to the practice test - kubeconfig
+- Look for the kube config file under `/root/.kube`
+  
+  <details>
+  ```
+  $ ls -l /root/.kube
+  ```
+  </details>
+    
+- Run the kubectl config view command and count the number of clusters
+
+  <details>
+  ```
+  $ kubectl config view
+  ```
+  </details>
+    
+- Run the command `kubectl config view` and count the number of users
+
+  <details>
+  ```
+  $ kubectl config view
+  ```
+  </details>
+  
+- How many contexts are defined in the default kubeconfig file?
+  
+  <details>
+  ```
+  $ kubectl config view
+  ```
+  </details>
+  
+- Run the command 'kubectl config view' and look for the user name.
+  
+  <details>
+  ```
+  $ kubectl config view
+  ```
+  </details>
+  
+- What is the name of the cluster configured in the default kubeconfig file?
+  
+  <details>
+  ```
+  $ kubectl config view
+  ```
+  </details>
+  
+- Run the command 'kubectl config view --kubeconfig my-kube-config'
+  
+  <details>
+  ```
+  $ kubectl config view --kubeconfig my-kube-config
+  ```
+  </details>
+  
+- How many contexts are configured in the 'my-kube-config' file?
+  
+  <details>
+  ```
+  $ kubectl config view --kubeconfig my-kube-config
+  ```
+  </details>
+  
+- What user is configured in the 'research' context?
+  
+  <details>
+  ```
+  $ kubectl config view --kubeconfig my-kube-config
+  ```
+  </details>
+    
+- What is the name of the client-certificate file configured for the 'aws-user'?
+  
+  <details>
+  ```
+  $ kubectl config view --kubeconfig my-kube-config
+  ```
+  </details>
+  
+- What is the current context set to in the 'my-kube-config' file?
+  
+  <details>
+  ```
+  $ kubectl config view --kubeconfig my-kube-config
+  ```
+  </details>
+  
+- Run the command kubectl config --kubeconfig=/root/my-kube-config use-context research
+  
+  <details>
+  ```
+  $ kubectl config --kubeconfig=/root/my-kube-config use-context research
+  ```
+  </details>
+  
+- Replace the contents in the default kubeconfig file with the content from my-kube-config file.
+  
+  <details>
+  ```
+  $ mv .kube/config .kube/config.bak
+  $ cp /root/my-kube-config .kube/config
+  ```
+  </details>
+  
+- The path to certificate is incorrect in the kubeconfig file. Fix it. All users certificates are stored at /etc/kubernetes/pki/users
+  
+ <details>
+  $ kubectl get pods
+  master $ ls
+  dev-user.crt  dev-user.csr  dev-user.key
+  master $ vi /root/.kube/config
+  master $ grep dev-user.crt /root/.kube/config
+    client-certificate: /etc/kubernetes/pki/users/dev-user/dev-user.crt
+  master $ pwd
+  /etc/kubernetes/pki/users/dev-user
+  master $ kubectl get pods
+  No resources found in default namespace.
+ </details>
+
+<br><br><br>
+
+# Practice Test - RBAC
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-role-based-access-controls/)
+
+Solutions to practice test - RBAC
+- Run the command kubectl describe pod kube-apiserver-master -n kube-system and look for --authorization-mode
+  
+  <details>
+  
+  ```
+  $ kubectl describe pod kube-apiserver-master -n kube-system
+  ```
+  
+  </details>
+  
+- Run the command kubectl get roles
+
+  <details>
+  
+  ```
+  $ kubectl get roles
+  ```
+  
+  </details>
+  
+- Run the command kubectl get roles --all-namespaces
+  
+  <details>
+  
+  ```
+  $ kubectl get roles --all-namespaces
+  ```
+  
+  </details>
+  
+- Run the command kubectl describe role kube-proxy -n kube-system
+  
+  <details>
+  
+  ```
+  $ kubectl describe role kube-proxy -n kube-system
+  ```
+  
+  </details>
+  
+- Check the verbs associated to the kube-proxy role
+  
+  <details>
+  ```
+  $ kubectl describe role kube-proxy -n kube-system
+  ```
+  </details>
+  
+- Which of the following statements are true?
+  
+  <details>
+  ```
+  kube-proxy role can get details of configmap object by the name kube-proxy
+  ```
+  </details>
+  
+- Run the command kubectl describe rolebinding kube-proxy -n kube-system
+  
+  <details>
+  ```
+  $ kubectl describe rolebinding kube-proxy -n kube-system
+  ```
+  </details>
+  
+- Run the command kubectl get pods --as dev-user
+  
+  <details>
+  ```
+  $ kubectl get pods --as dev-user
+  ```
+  </details>
+  
+- Answer file located at /var/answers
+  
+  <details>
+  
+  ```
+  $ kubectl create -f /var/answers/developer-role.yaml
+  ```
+  
+  </details>
+  
+- New roles and role bindings are created in the blue namespace. Check it out. Check the resourceNames configured on the role
+  
+  <details>
+  
+  ```
+  $ kubectl get roles,rolebindings -n blue
+  $ kubectl describe role developer -n blue
+  $ kubectl edit role developer -n blue (update the resourceNames)
+  ```
+  
+  </details>
+  
+- View the answer file located at /var/answers/dev-user-deploy.yaml
+  
+  <details>
+  
+  ```
+  $ kubectl create -f /var/answers/dev-user-deploy.yaml
+  ```
+  
+  </details>
+
+<br><br><br>
+
+# Practice Test - Cluster Roles
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-cluster-roles/)
+ 
+Solutions to practice test - cluster roles
+- Run the command kubectl get clusterroles --no-headers | wc -l or kubectl get clusterroles --no-headers -o json | jq '.items | length'
+  
+  <details>
+  
+  ```
+  $ kubectl get clusterroles --no-headers | wc -l (or)
+  $ kubectl get clusterroles --no-headers -o json | jq '.items | length'
+  ```
+  
+  </details>
+  
+- Run the command kubectl get clusterrolebindings --no-headers | wc -l or kubectl get clusterrolebindings --no-headers -o json | jq '.items | length'
+
+  <details>
+  
+  ```
+  $ kubectl get clusterrolebindings --no-headers | wc -l (or)
+  $ kubectl get clusterrolebindings --no-headers -o json | jq '.items | length'
+  ```
+  
+  </details>
+  
+- What namespace is the cluster-admin clusterrole part of?
+
+  <details>
+  
+  ```
+  $ Cluster roles are cluster wide and not part of any namespace
+  ```
+  
+  </details>
+  
+- Run the command kubectl describe clusterrolebinding cluster-admin
+  
+  <details>
+  
+  ```
+  $ kubectl describe clusterrolebinding cluster-admin
+  ```
+  
+  </details>
+  
+- Run the command kubectl describe clusterrole cluster-admin
+
+  <details>
+  
+  ```
+  $ kubectl describe clusterrole cluster-admin
+  ```
+  
+  </details>
+  
+- Check answer at /var/answers
+
+  <details>
+  
+  ```
+  $ kubectl create -f /var/answers/michelle-node-admin.yaml
+  ```
+  
+  </details>
+  
+- Check answer at /var/answers
+
+  <details>
+  
+  ```
+  $ kubectl create -f /var/answers/michelle-storage-admin.yaml
+  ```
+  
+  </details>
+  
+<br><br><br>
+
+# Practice Test - Image Security
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-image-security/)
+
+Solutions to the practice test - Image Security
+- We have an application running on our cluster. Let us explore it first. What image is the application using?
+
+  <details>
+  
+  ```
+  $ kubectl get deploy -o wide
+  ```
+  
+  </details>
+  
+- Use the kubectl edit deployment command to edit the image name to myprivateregistry.com:5000/nginx:alpine
+
+  <details>
+  
+  ```
+  $ kubectl edit deployment web
+  ```
+  
+  </details>
+  
+- Run the command kubectl get pods command and check the status of the pods
+
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  
+  </details>
+  
+- Run command kubectl create secret docker-registry private-reg-cred --docker-username=dock_user --docker-password=dock_password --docker-server=myprivateregistry.com:5000 --docker-email=dock_user@myprivateregistry.com
+  
+  <details>
+  
+  ```
+  $ kubectl create secret docker-registry private-reg-cred --docker-username=dock_user --docker-password=dock_password --docker-server=myprivateregistry.com:5000 --docker-email=dock_user@myprivateregistry.com
+  ```
+  
+  </details>
+  
+- Edit deployment using kubectl edit deploy web command and add imagePullSecrets section. Use private-reg-cred
+  
+  <details>
+  
+  ```
+  $ kubectl edit deploy web
+  ```
+  
+  </details>
+  
+- Check the status of PODs. Wait for them to be running. You have now successfully configured a Deployment to pull images from the private registry
+  
+  <details>
+  
+  ```
+  $ kubectl get pods
+  ```
+  </details>
+
+  <br><br><br>
