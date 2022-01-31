@@ -2856,3 +2856,2751 @@ Solutions to the practice test - Image Security
   </details>
 
   <br><br><br>
+
+# Practice Test - Security Context
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-security-contexts/)
+  
+Solutions to practice test - security context
+- Run the command 'kubectl exec ubuntu-sleeper whoami' and count the number of pods.
+
+  <details>
+  
+  ```
+  $ kubectl exec ubuntu-sleeper whoami
+  ```
+  
+  </details>
+  
+- Set a security context to run as user 1010.
+
+  <details>
+  
+  ```
+  $ kubectl get pods ubuntu-sleeper -o yaml > ubuntu.yaml
+  $ kubectl delete pod ubuntu-sleeper
+  $ vi ubuntu.yaml ( add securityContext Section)
+    securityContext:
+      runAsUser: 1010
+  $ kubectl create -f ubuntu.yaml
+  ```
+  
+  </details>
+  
+- The User ID defined in the securityContext of the container overrides the User ID in the POD.
+ 
+- The User ID defined in the securityContext of the POD is carried over to all the PODs in the container.
+
+- Run kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'
+  
+  <details>
+  
+  ```
+  $ kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'
+  ```
+  
+  </details>
+  
+- Add SYS_TIME capability to the container's securityContext
+  
+  <details>
+  
+  ```
+  $ kubectl get pods ubuntu-sleeper -o yaml > ubuntu.yaml
+  $ kubectl delete pod ubuntu-sleeper
+  $ vi ubuntu.yaml
+  
+  Under container section add the below
+  
+  securityContext:
+      capabilities:
+        add: ["SYS_TIME"]
+        
+  $ kubectl create -f ubuntu.yaml
+  ```
+  
+  </details>
+  
+ - Now try to run the below command in the pod to set the date. If the security capability was added correctly, it should work. If it doesn't make sure you changed the user back to root.
+  
+   <details>
+  
+   ```
+   $ kubectl exec -it ubuntu-sleeper -- date -s '19 APR 2012 11:14:00'
+   ```
+  
+   </details>
+
+<br><br><br>
+
+# Practice Test - Network Policies
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-network-policies/)
+
+Solutions to practice test - network policies
+
+- Run the command 'kubectl get networkpolicy'
+  
+  <details>
+  
+  ```
+  $ kubectl get networkpolicy
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl get networkpolicy'
+   
+  <details>
+  
+  ```
+  $ kubectl get networkpolicy
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl get networkpolicy' and look under pod selector
+  
+  <details>
+  
+  ```
+  $ kubectl get networkpolicy
+  ```
+  
+  </details>
+  
+- Run the command 'kubectl describe networkpolicy' and look under PolicyTypes
+  
+  <details>
+  
+  ```
+  $ kubectl describe networkpolicy
+  ```
+  
+  </details>
+  
+- What is the impact of the rule configured on this Network Policy?
+  
+  <details>
+  
+  ```
+  Traffic from internal to payroll pod is blocked
+  ```
+  
+  </details>
+  
+- What is the impact of the rule configured on this Network Policy?
+  
+  <details>
+  
+  ```
+  Internal pod can access port 8080 on payroll pod
+  ```
+  
+  </details>
+  
+- Access the UI of these applications using the link given above the terminal.
+
+- Only internal applications can access payroll service
+
+- Perform a connectivity test using the User Interface of the Internal Application to access the 'external-service' at port '8080'.
+  
+  <details>
+  
+  ```
+  Successful
+  ```
+  
+  </details>
+  
+- Answer file located at /var/answers/answer-internal-policy.yaml
+  
+  <details>
+  
+  ```
+  $ kubectl create -f /var/answers/answer-internal-policy.yaml
+  ```
+  
+  </details>
+  
+<br><br><br>
+
+# Practice Test - Persistent Volume Claims
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-persistent-volume-claims/)
+
+#### Solution
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      OK
+      ```
+    
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      OK
+      ```
+     </details>
+ 
+  3. Check the Solution
+
+     <details>
+
+      ```
+      No
+      ```
+     </details>
+
+  4. Check the Solution
+    
+     <details>
+
+      ```
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: webapp
+      spec:
+        containers:
+        - name: event-simulator
+          image: kodekloud/event-simulator
+          env:
+          - name: LOG_HANDLERS
+            value: file
+          volumeMounts:
+          - mountPath: /log
+            name: log-volume
+      
+        volumes:
+        - name: log-volume
+          hostPath:
+            # directory location on host
+            path: /var/log/webapp
+            # this field is optional
+            type: Directory
+      ```
+      </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: pv-log
+      spec:
+        accessModes:
+          - ReadWriteMany
+        capacity:
+          storage: 100Mi
+        hostPath:
+          path: /pv/log
+      ```
+
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: claim-log-1
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Mi
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      PENDING
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      AVAILABLE
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      Access Modes Mismatch
+      ```
+     </details>
+
+  10. Check the Solution
+
+      <details>
+ 
+       ```
+       kind: PersistentVolumeClaim
+       apiVersion: v1
+       metadata:
+         name: claim-log-1
+       spec:
+         accessModes:
+           - ReadWriteMany
+         resources:
+           requests:
+             storage: 50Mi
+       ```
+      </details>
+
+  11. Check the Solution
+
+      <details>
+ 
+       ```
+       100Mi
+       ```
+      </details>
+
+  12. Check the Solution
+
+      <details>
+ 
+       ```
+       apiVersion: v1
+       kind: Pod
+       metadata:
+         name: webapp
+       spec:
+         containers:
+         - name: event-simulator
+           image: kodekloud/event-simulator
+           env:
+           - name: LOG_HANDLERS
+             value: file
+           volumeMounts:
+           - mountPath: /log
+             name: log-volume
+       
+         volumes:
+         - name: log-volume
+           persistentVolumeClaim:
+             claimName: claim-log-1
+       ```
+      </details>
+
+  13. Check the Solution
+
+      <details>
+ 
+       ```
+       Retain
+       ```
+      </details>
+
+  14. Check the Solution
+
+      <details>
+ 
+       ```
+       The PV is not delete but not available
+       ```
+      </details>
+
+  15. Check the Solution
+
+      <details>
+ 
+       ```
+       The PVC is stuck in `terminating` state
+       ```
+      </details>
+
+  16. Check the Solution
+
+      <details>
+ 
+       ```
+       The PVC is being used by a POD
+       ```
+      </details>
+
+  17. Check the Solution
+
+      <details>
+ 
+       ```
+       kubectl delete pod webapp
+       ```
+      </details>
+
+  18. Check the Solution
+
+      <details>
+ 
+       ```
+       Deleted
+       ```
+      </details>
+
+  19. Check the Solution
+
+      <details>
+ 
+       ```
+       Released
+       ```
+      </details>
+
+<br><br><br>
+
+# Practice Test - Storage Class
+  
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-storage-class-2/)
+
+#### Solution
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      0
+      ```
+    
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      2
+      ```
+     </details>
+ 
+  3. Check the Solution
+
+     <details>
+
+      ```
+      local-storage
+      ```
+     </details>
+
+  4. Check the Solution
+    
+     <details>
+
+      ```
+      WaitForFirstConsumer
+      ```
+      </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      portworx-volume
+      ```
+
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      NO
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: local-pvc
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi
+        storageClassName: local-storage
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      Pending
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      A Pod consuming the volume in not scheduled
+      ```
+     </details>
+
+  10. Check the Solution
+
+      <details>
+ 
+       ```
+       The Storage Class called local-storage makes use of VolumeBindingMode set to WaitForFirstConsumer. This will delay the binding and provisioning of a PersistentVolume until a Pod using the PersistentVolumeClaim is created.
+       ```
+      </details>
+
+  11. Check the Solution
+
+      <details>
+ 
+       ```
+       apiVersion: v1
+       kind: Pod
+       metadata:
+         name: nginx
+         labels:
+           name: nginx
+       spec:
+           containers:
+           - name: nginx
+             image: nginx:alpine
+             volumeMounts:
+             - name: local-persistent-storage
+               mountPath: /var/www/html
+           volumes:
+           - name: local-persistent-storage
+             persistentVolumeClaim:
+               claimName: local-pvc
+       ```
+      </details>
+
+  12. Check the Solution
+
+      <details>
+ 
+       ```
+       apiVersion: storage.k8s.io/v1
+       kind: StorageClass
+       metadata:
+         name: delayed-volume-sc
+       provisioner: kubernetes.io/no-provisioner
+       volumeBindingMode: WaitForFirstConsumer
+       ```
+      </details>
+
+<br><br><br>
+
+# Practice Test - Explore Env
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-explore-environment/)
+
+#### Solution
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+       2 
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      ens3
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      172.17.0.31
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      02:42:ac:11:00:1f
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      172.17.0.32
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      02:42:ac:11:00:20
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      docker0
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      DOWN
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      172.17.0.1
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      10251
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      2379
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      Ok
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test - CNI weave
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-cni-weave/)
+
+#### Solution
+
+  1. Check the Solution
+
+     <details>
+
+      ``` 
+      CNI
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      /opt/cni/bin
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      cisco
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```   
+      weave
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      weave-net
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test - Deploy Networking Solution
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-deploy-network-solution/)
+
+#### Solution
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      Not Running
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      No Network Configured
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      Click [here](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+
+      OR Execute below command
+
+      kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test Networking Weave
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-networking-weave/)
+
+#### Solution 
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      4
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      weave
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      4
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      One on every node
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      weave
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      10.X.X.X
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      10.38.0.0
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test Service Networking
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-service-networking/)
+
+#### Solution 
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      172.17.0.0/16
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      10.32.0.0/12
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      10.96.0.0/12
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      2
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      iptables
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      using daemonset
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test CoreDNS in Kubernetes
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-coredns-in-kubernetes/)
+
+#### Solution 
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      CoreDNS
+      ```
+     </details>
+  
+  2. Check the Solution
+
+     <details>
+
+      ```
+      2
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      10.96.0.10
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      /etc/coredns/Corefile
+
+      OR
+
+      kubectl -n kube-system describe deployments.apps coredns | grep -A2 Args | grep Corefile
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      Configured as a ConfigMapObject
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      CoreDNS
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      coredns
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      cluster.local
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      Ok
+      ```
+     </details>
+
+  10. Check the Solution
+
+      <details>
+
+       ```
+       web-service
+       ```
+      </details>
+
+  11. Check the Solution
+
+      <details>
+ 
+       ```
+       web-serivce.default.pod
+       ```
+      </details>
+
+  12. Check the Solution
+
+      <details>
+ 
+       ```
+       web-service.payroll
+       ```
+      </details>
+
+  13. Check the Solution
+
+      <details>
+ 
+       ```
+       web-service.payroll.svc.cluster
+       ```
+      </details>
+
+  14. Check the Solution
+
+      <details>
+ 
+       ```
+       kubectl edit deploy webapp
+ 
+       Search for DB_Host and Change the DB_Host from mysql to mysql.payroll
+ 
+       spec:
+         containers:
+         - env:
+           - name: DB_Host
+             value: mysql.payroll
+       ```
+      </details>
+ 
+  15. Check the Solution
+
+      <details>
+ 
+       ```
+       kubectl exec -it hr -- nslookup mysql.payroll > /root/nslookup.out
+       ```
+      </details>
+
+<br><br><br>
+
+# Practice Test CKA Ingress 1
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-cka-ingress-networking-1/)
+
+#### Solution 
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      Ok
+      ```
+     </details>
+  
+  2. Check the Solution
+
+     <details>
+
+      ```
+      INGRESS-SPACE
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      NGINX-INGRESS-CONTROLLER
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      APP-SPACE
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      3
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      APP-SPACE
+      ```
+     </details>
+
+  7. Check the Solution
+
+     <details>
+
+      ```
+      INGRESS-WEAR-WATCH
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      ALL-HOSTS(*)
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      WEAR-SERVICE
+      ```
+     </details>
+
+  10. Check the Solution
+
+      <details>
+
+       ```
+        /WATCH
+       ```
+      </details>
+
+  11. Check the Solution
+
+      <details>
+
+       ```
+        DEFAULT-HTTP-BACKEND
+       ```
+      </details>
+
+  12. Check the Solution
+
+      <details>
+
+       ```
+        404-ERROR-PAGE
+       ```
+      </details>
+
+  13. Check the Solution
+
+      <details>
+
+       ```
+        OK
+       ```
+      </details>
+
+  14. Check the Solution
+
+      <details>
+ 
+        ```
+        kubectl edit ingress --namespace app-space
+ 
+        Change the path from /watch to /stream
+    
+        OR
+ 
+        apiVersion: v1
+        items:
+        - apiVersion: extensions/v1beta1
+          kind: Ingress
+          metadata:
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+            name: ingress-wear-watch
+            namespace: app-space
+          spec:
+            rules:
+            - http:
+                paths:
+                - backend:
+                    serviceName: wear-service
+                    servicePort: 8080
+                  path: /wear
+                  pathType: ImplementationSpecific
+                - backend:
+                    serviceName: video-service
+                    servicePort: 8080
+                  path: /stream
+                  pathType: ImplementationSpecific
+          status:
+            loadBalancer:
+              ingress:
+              - {}
+        kind: List
+        metadata:
+          resourceVersion: ""
+          selfLink: ""
+       ```
+      </details>
+
+  15. Check the Solution
+
+      <details>
+
+       ```
+        OK
+       ```
+      </details>
+
+  16. Check the Solution
+
+      <details>
+
+       ```
+        404 ERROR PAGE
+       ```
+      </details>
+
+  17. Check the Solution
+
+      <details>
+
+       ```
+        OK
+       ```
+      </details>
+
+  18. Check the Solution
+
+      <details>
+
+       ```
+        Run the command 'kubectl edit ingress --namespace app-space' and add a new Path entry for the new service.
+
+        OR
+
+       apiVersion: v1
+       items:
+       - apiVersion: extensions/v1beta1
+         kind: Ingress
+         metadata:
+           annotations:
+             nginx.ingress.kubernetes.io/rewrite-target: /
+             nginx.ingress.kubernetes.io/ssl-redirect: "false"
+           name: ingress-wear-watch
+           namespace: app-space
+         spec:
+           rules:
+           - http:
+               paths:
+               - backend:
+                   serviceName: wear-service
+                   servicePort: 8080
+                 path: /wear
+                 pathType: ImplementationSpecific
+               - backend:
+                   serviceName: video-service
+                   servicePort: 8080
+                 path: /stream
+                 pathType: ImplementationSpecific
+               - backend:
+                   serviceName: food-service
+                   servicePort: 8080
+                 path: /eat
+                 pathType: ImplementationSpecific
+         status:
+           loadBalancer:
+             ingress:
+             - {}
+       kind: List
+       metadata:
+         resourceVersion: ""
+         selfLink: ""
+       ```
+      </details>
+
+  19. Check the Solution
+
+      <details>
+
+       ```
+        OK
+       ```
+      </details>
+
+  20. Check the Solution
+
+      <details>
+
+       ```
+        CRITICAL-SPACE
+       ```
+      </details>
+
+  21. Check the Solution
+
+      <details>
+
+       ```
+        WEBAPP-PAY
+       ```
+      </details>
+
+  22. Check the Solution
+
+      <details>
+
+       ```
+        apiVersion: extensions/v1beta1
+        kind: Ingress
+        metadata:
+          name: test-ingress
+          namespace: critical-space
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+        spec:
+          rules:
+          - http:
+              paths:
+              - path: /pay
+                backend:
+                  serviceName: pay-service
+                  servicePort: 8282
+        ```
+        </details>
+
+  23. Check the Solution
+
+      <details>
+
+       ```
+        OK
+       ```
+      </details>
+
+<br><br><br>
+
+# Practice Test CKA Ingress 2
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-cka-ingress-networking-2/)
+
+#### Solution 
+
+  1. Check the Solution
+
+     <details>
+
+      ```
+      OK
+      ```
+     </details>
+
+  2. Check the Solution
+
+     <details>
+
+      ```
+      kubectl create namespace ingress-space
+      ```
+     </details>
+
+  3. Check the Solution
+
+     <details>
+
+      ```
+      kubectl create configmap nginx-configuration --namespace ingress-space
+      ```
+     </details>
+
+  4. Check the Solution
+
+     <details>
+
+      ```
+      kubectl create serviceaccount ingress-serviceaccount --namespace ingress-space
+      ```
+     </details>
+
+  5. Check the Solution
+
+     <details>
+
+      ```
+      Ok
+
+      kubectl get roles,rolebindings --namespace ingress-space
+      ```
+     </details>
+
+  6. Check the Solution
+
+     <details>
+
+      ```
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ingress-controller
+        namespace: ingress-space
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            name: nginx-ingress
+        template:
+          metadata:
+            labels:
+              name: nginx-ingress
+          spec:
+            serviceAccountName: ingress-serviceaccount
+            containers:
+              - name: nginx-ingress-controller
+                image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+                args:
+                  - /nginx-ingress-controller
+                  - --configmap=$(POD_NAMESPACE)/nginx-configuration
+                  - --default-backend-service=app-space/default-http-backend
+                env:
+                  - name: POD_NAME
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.name
+                  - name: POD_NAMESPACE
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.namespace
+                ports:
+                  - name: http
+                    containerPort: 80
+                  - name: https
+                    containerPort: 443
+      ```
+     </details>
+  
+  7. Check the Solution
+
+     <details>
+
+      ```
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ingress
+        namespace: ingress-space
+      spec:
+        type: NodePort
+        ports:
+        - port: 80
+          targetPort: 80
+          protocol: TCP
+          nodePort: 30080
+          name: http
+        - port: 443
+          targetPort: 443
+          protocol: TCP
+          name: https
+        selector:
+          name: nginx-ingress
+      ```
+     </details>
+
+  8. Check the Solution
+
+     <details>
+
+      ```
+      apiVersion: extensions/v1beta1
+      kind: Ingress
+      metadata:
+        name: ingress-wear-watch
+        namespace: app-space
+        annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      spec:
+        rules:
+        - http:
+            paths:
+            - path: /wear
+              backend:
+                serviceName: wear-service
+                servicePort: 8080
+            - path: /watch
+              backend:
+                serviceName: video-service
+                servicePort: 8080
+      ```
+     </details>
+
+  9. Check the Solution
+
+     <details>
+
+      ```
+      OK
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test - Install kubernetes cluster using kubeadm tool
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-deploy-a-kubernetes-cluster-using-kubeadm/)
+
+# Solutions for practice test - Install Using Kubeadm
+
+  1. Check the solution
+
+     <details>
+     
+      ```
+      sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      deb https://apt.kubernetes.io/ kubernetes-xenial main
+      EOF
+      sudo apt-get update
+      sudo apt-get install -y kubelet kubeadm kubectl
+      sudo apt-mark hold kubelet kubeadm kubectl
+      ```
+     </details>
+
+  2. Check the solution
+
+     <details>
+      
+      ```
+      kubelet --version
+      ``` 
+     </details>
+
+  3. Check the solution
+
+     <details>
+      
+      ```
+      0
+      ``` 
+     </details>
+
+  5. Click on **`OK`**
+
+  6. Check the solution
+
+     <details>
+      
+      ```
+      kubeadm init
+      ``` 
+     </details>
+
+  7. Click on **`OK`**
+
+  8. Click on **`Check`** 
+
+  9. Check the solution
+
+     <details>
+
+      ```
+      kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+      ```
+     </details>
+
+<br><br><br>
+
+# Practice Test - Application Failure
+
+  - Take me to [Practice Test](https://kodekloud.com/topic/practice-test-application-failure/) of the Application Failure
+
+    ### Solution
+
+    1. Check Solution 
+
+       <details>
+
+        ```
+         kubectl delete svc mysql -n alpha
+        ```
+        
+        ```
+         apiVersion: v1
+         kind: Service
+         metadata:
+           name: mysql-service
+           namespace: alpha
+         spec:
+           ports:
+           - port: 3306
+             protocol: TCP
+             targetPort: 3306
+           selector:
+             name: mysql
+           sessionAffinity: None
+           type: ClusterIP
+         status:
+           loadBalancer: {}
+        ```   
+       </details>
+
+    2. Check Solution
+
+       <details>
+  
+       You can edit the `mysql-service` service and change the targetPort "8080" to "3306".
+        ```
+        kubectl edit svc mysql-service -n beta
+        ```
+        
+       OR
+        
+       Delete the `mysql-service` service and then apply below manifest:
+        ```
+        kubectl delete svc mysql-service -n beta
+        ```
+  
+        ```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: mysql-service
+          namespace: beta
+        spec:
+          ports:
+          - port: 3306
+            protocol: TCP
+            targetPort: 3306
+          selector:
+            name: mysql
+          sessionAffinity: None
+          type: ClusterIP
+        status:
+          loadBalancer: {}
+        ```
+       </details>
+
+    3. Check Solution
+
+       <details>
+
+       ```
+       kubectl edit svc mysql-service -n gamma
+       Press Esc, then colon(:)
+       :%s/sql00001/mysql/
+       ```
+       </details>
+
+    4. Check Solution
+
+       <details>
+
+        ```
+        kubectl edit deployment.apps/webapp-mysql -n delta
+
+        Change the DB_User's value to root.
+
+        :%s/sql-user/root
+
+        - name: DB_User
+          value: root
+        ```
+       </details>
+
+    5. Check Solution
+
+       <details>
+ 
+        ```
+        kubectl edit pod mysql -n epsilon
+
+        Replace the DB_Password with the correct password as shown below, then delete the pod and re-create it again.
+        
+        :%s/passwooooorrddd/paswrd
+        
+        save the file with ":wq" in vi editor and it will create a temporary file with random name under the default path /tmp/kubectl-edit-xxxxx.yaml. After deleting the existing one, re-create it again with kubectl apply -f or kubectl create -f command.
+        
+        In the "webapp-mysql" deployments, change the DB_User's value to root.
+        
+        kubectl edit deployment.apps/webapp-mysql -n epsilon
+
+        :%s/sql-user/root
+
+        - name: DB_User
+          value: root
+          
+        save the file and exit with ":wq" in vi editor. 
+        ```
+       </details>
+    
+    6. Check Solution
+
+       <details>
+ 
+        ```
+        kubectl edit deployment.apps/webapp-mysql -n zeta
+
+        Change the DB_User's value to root.
+
+        :%s/sql-user/root
+
+        - name: DB_User
+          value: root
+        ```
+
+        ```
+        Replace the DB_Password with the correct password as shown below, delete the pod and re-create it.
+
+        kubectl edit pod mysql -n zeta
+
+        :%s/passwooooorrddd/paswrd
+     
+        save the file with ":wq" in vi editor and it will create a temporary file with random name under the default path /tmp/kubectl-edit-xxxxx.yaml. After deleting the existing one, re-create it again with kubectl apply -f or kubectl create -f command. 
+        ```
+
+        ```
+        kubectl edit svc web-service -n zeta
+
+        Change the nodePort from "30088" to "30081".
+
+        :%s/30088/30081
+        ```
+       </details>
+
+<br><br><br>
+
+# Solution Control Plane Failure
+
+  - Lets have a look at the [Practice Test](https://kodekloud.com/topic/practice-test-control-plane-failure/) of the Control Plane Failure
+
+    ### Solution
+
+    1. Check Solution 
+
+       <details>
+
+        ```
+        kubectl get pods -n kube-system
+        ```
+
+        ```
+        sed -i 's/kube-schedulerrrr/kube-scheduler/g' /etc/kubernetes/manifests/kube-scheduler.yaml
+        ```
+       </details>
+
+    2. Check Solution
+
+       <details>
+
+        ```
+        kubectl scale deploy app --replicas=2
+        ```
+       </details>
+
+    3. Check Solution
+
+       <details>
+
+        ```
+        sed -i 's/controller-manager-XXXX.conf/controller-manager.conf/' /etc/kubernetes/manifests/kube-controller-manager.yaml
+        ```
+       </details>
+
+    4. Check Solution
+
+       <details>
+
+        ```
+        sed -i 's/WRONG-PKI-DIRECTORY/pki/' /etc/kubernetes/manifests/kube-controller-manager.yaml
+        ```
+       </details>
+
+<br><br><br>
+
+# Solution Worker Node Failure
+
+  - Lets have a look at the [Practice Test](https://kodekloud.com/topic/practice-test-worker-node-failure/) of the Worker Node Failure
+
+    ### Solution
+
+    1. Check Solution 
+
+       <details>
+
+        ```
+        ssh node01
+
+        service kubelet start
+        ```
+        </details>
+
+    2. Check Solution
+      
+       <details>
+
+        ```
+        sed -i 's/WRONG-CA-FILE.crt/ca.crt/g' /var/lib/kubelet/config.yaml
+        ```
+       </details>
+
+    3. Check Solution
+      
+       <details>
+
+        ```
+        sed -i 's/6553/6443/g' /etc/kubernetes/kubelet.conf
+        ```
+       </details>
+
+<br><br><br>
+
+# Solution Troubleshoot Network
+
+  - Lets have a look at the [Practice Test](https://kodekloud.com/topic/practice-test-troubleshoot-network/) of the Troubleshoot Network
+
+    ### Solution
+
+    1. Check Solution
+
+       <details>
+
+        ```
+         The pods are in a pending state? Does the cluster have a Network Addon installed?
+		 Install Weave using:
+		 kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+        ```
+        </details>
+
+    2. Check Solution
+
+       <details>
+
+        ```
+         The kube-proxy pods are not running. As a result the rules needed to allow connectivity to the services have not been created.
+
+         1. Check the logs of the kube-proxy pods
+         kubectl -n kube-system logs <name_of_the_kube_proxy_pod>
+
+         2. The configuration file "/var/lib/kube-proxy/configuration.conf" is not valid. The configuration path does not match the data in the ConfigMap.
+         kubectl -n kube-system describe configmap kube-proxy shows that the file name used is "config.conf" which is mounted in the kube-proxy daemonset pods at the path /var/lib/kube-proxy/config.conf
+
+         3. However in the DaemonSet for kube-proxy, the command used to start the kube-proxy pod makes use of the path /var/lib/kube-proxy/configuration.conf.
+
+          Correct this path to /var/lib/kube-proxy/config.conf as per the ConfigMap and recreate the kube-proxy pods.
+
+          This should get the kube-proxy pods back in a running state.
+        ```
+       </details>
+
+    3. Check Solution
+
+       <details>
+
+        ```
+         The kube-dns service is not working as expected. The first thing to check is if the service has a valid endpoint? Does it point to the kube-dns/core-dns?
+
+         Run: kubectl -n kube-system get ep kube-dns
+
+         If there are no endpoints for the service, inspect the service and make sure it uses the correct selectors and ports.
+
+         Run: kubectl -n kube-system describe svc kube-dns
+
+         Note that the selector used is: k8s-app=core-dns
+
+         If you compare this with the label set on the coredns deployment and its pods, you will see that the selector should be k8s-app=kube-dns
+
+         Modify the kube-dns service and update the selector to k8s-app=kube-dns
+         (Easiest way is to use the kubectl edit command)
+        ```
+       </details>
+
+<br><br><br>
+
+# Practice Test for Advance Kubectl Commands
+
+  - Take me to [Advance Practice Test for Kubectl Commands](https://kodekloud.com/topic/practice-test-advanced-kubectl-commands/)
+
+  ### Solution
+
+   1. Check Solution 
+
+       <details>
+       
+        ```
+        kubectl get nodes -o json > /opt/outputs/nodes.json
+        ```   
+       </details>
+
+   2. Check Solution 
+
+       <details>
+
+        ```
+        kubectl get node node01 -o json > /opt/outputs/node01.json
+        ```   
+       </details>
+
+   3. Check Solution
+
+       <details>
+
+        ```
+        kubectl get nodes -o=jsonpath='{.items[*].metadata.name}' > /opt/outputs/node_names.txt
+        ```
+       </details>
+
+   4. Check Solution
+
+       <details>
+
+        ```
+        kubectl get nodes -o jsonpath='{.items[*].status.nodeInfo.osImage}' > /opt/outputs/nodes_os.txt
+        ```
+       </details>
+
+   5. Check Solution
+
+       <details>
+
+        ```
+        kubectl config view --kubeconfig=my-kube-config -o jsonpath="{.users[*].name}" > /opt/outputs/users.txt
+        ```
+       </details>
+
+   6. Check Solution
+
+       <details>
+
+        ```
+        kubectl get pv --sort-by=.spec.capacity.storage > /opt/outputs/storage-capacity-sorted.txt
+        ```
+       </details>
+
+   7. Check Solution
+
+       <details>
+
+        ```
+        kubectl get pv --sort-by=.spec.capacity.storage -o=custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage > /opt/outputs/pv-and-capacity-sorted.txt
+        ```
+       </details>
+
+   8. Check Solution
+
+       <details>
+
+        ```
+        kubectl config view --kubeconfig=my-kube-config -o jsonpath="{.contexts[?(@.context.user=='aws-user')].name}" > /opt/outputs/aws-context-name
+        ```
+       </details>
+       
+<br><br><br>
+
+# Lightining Lab 1
+
+  - I am ready! [Take me to Lightning Lab 1](https://kodekloud.com/topic/lightning-lab-1-2/)
+
+## Solution to LL-1
+
+   1. Use below commands step-by-step as mentioned:
+
+      <details>
+   
+      ```
+      On Controlplane Node:-
+
+      kubectl drain controlplane --ignore-daemonsets
+      apt-get install kubeadm=1.20.0-00
+      kubeadm  upgrade plan
+      kubeadm  upgrade apply v1.20.0
+      apt-get install kubelet=1.20.0-00
+      systemctl daemon-reload
+      systemctl restart kubelet
+      kubectl uncordon controlplane
+      kubectl drain node01 --ignore-daemonsets
+      
+      
+      On Worker Node:-
+      
+      apt-get update
+      apt-get install kubeadm=1.20.0-00
+      kubeadm upgrade node
+      apt-get install kubelet=1.20.0-00
+      systemctl daemon-reload
+      systemctl restart kubelet     
+
+      Back on Controlplane Node:-
+      
+      kubectl uncordon node01
+      kubectl get pods -o wide | grep gold (make sure this is scheduled on controlplane node)
+      ```
+      </details>
+
+   2. Execute below command:
+
+      <details>
+   
+      ```
+      kubectl -n admin2406 get deployment -o custom-columns=DEPLOYMENT:.metadata.name,CONTAINER_IMAGE:.spec.template.spec.containers[].image,READY_REPLICAS:.status.readyReplicas,NAMESPACE:.metadata.namespace --sort-by=.metadata.name > /opt/admin2406_data
+      ```
+      </details>
+
+   3. Use below command and fix the issue:
+
+      <details>
+
+      ```
+      Make sure the port for the kube-apiserver is correct.
+
+      Change port from 2379 to 6443 using below command
+      
+      vi /root/CKA/admin.kubeconfig
+
+      Now replace the port 2379 with 6443
+      
+      Run:
+      
+      kubectl cluster-info --kubeconfig /root/CKA/admin.kubeconfig
+      ```
+      </details>
+    
+   4. Use below command for the solution:
+
+      <details>
+     
+      ```
+      kubectl create deployment nginx-deploy --image=nginx:1.16
+      kubectl set image deployment/nginx-deploy nginx=nginx:1.17 --record
+      ```
+      </details>
+    
+   5. Apply/refer below yaml to create a PersistentVolumeClaim:
+      
+      <details>
+
+      ```
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: mysql-alpha-pvc
+        namespace: alpha
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: slow
+      ```
+      </details>
+  
+   6. Execute below command for etcd backup:
+
+      <details>
+
+      ```
+      ETCDCTL_API='3' etcdctl snapshot save --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=127.0.0.1:2379 /opt/etcd-backup.db
+      ```
+      </details>
+
+   7. Apply below manifest for the solution:
+
+      <details>
+
+      ```
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        creationTimestamp: null
+        labels:
+          run: secret-1401
+        name: secret-1401
+        namespace: admin1401
+      spec:
+        volumes:
+        - name: secret-volume
+          secret:
+            secretName: dotfile-secret
+        containers:
+        - command:
+          - sleep
+          args:
+          - "4800"
+          image: busybox
+          name: secret-admin
+          volumeMounts:
+          - name: secret-volume
+            readOnly: true
+            mountPath: "/etc/secret-volume"     
+      ```
+      </details>
+
+<br><br><br>
+
+# Mock Exam 1
+
+  Test My Knowledge, Take me to [Mock Exam 1](https://kodekloud.com/topic/mock-exam-1-3/)
+
+  #### Solution to the Mock Exam 1
+
+  1. Apply below manifests:
+
+     <details>
+     
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       creationTimestamp: null
+       labels:
+         run: nginx-pod
+       name: nginx-pod
+     spec:
+       containers:
+       - image: nginx:alpine
+         name: nginx-pod
+         resources: {}
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+     status: {}
+     ```
+     </details>
+
+  2. Run below command which create a pod with labels:
+
+     <details>
+     
+     ```
+     kubectl run messaging --image=redis:alpine --labels=tier=msg
+     ```
+     </details>
+
+ 
+  3. Run below command to create a namespace:
+     
+     <details>
+
+     ```
+     kubectl create namespace apx-x9984574
+     ```
+     </details>
+
+  4. Use the below command which will redirect the o/p:
+
+     <details>
+
+     ```
+     kubectl get nodes -o json > /opt/outputs/nodes-z3444kd9.json
+     ```
+     </details>
+
+  5. Execute below command which will expose the pod on port 6379:
+
+     <details>
+
+     ```
+     kubectl expose pod messaging --port=6379 --name messaging-service
+     ```
+     </details>
+
+  6. Apply below manifests:
+
+     <details>
+
+      ```
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: hr-web-app
+        name: hr-web-app
+      spec:
+        replicas: 2
+        selector:
+          matchLabels:
+            app: hr-web-app
+        strategy: {}
+        template:
+          metadata:
+            creationTimestamp: null
+            labels:
+              app: hr-web-app
+          spec:
+            containers:
+            - image: kodekloud/webapp-color
+              name: webapp-color
+              resources: {}
+      status: {}
+      ```
+      
+      In v1.19, we can add `--replicas` flag with `kubectl create deployment` command:
+      ```
+      kubectl create deployment hr-web-app --image=kodekloud/webapp-color --replicas=2
+      ```
+     </details>
+
+  7. To Create a static pod, copy it to the static pods directory. In this case, it is `/etc/kubernetes/manifests`. Apply below manifests:
+
+     <details>
+
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       creationTimestamp: null
+       labels:
+         run: static-busybox
+       name: static-busybox
+     spec:
+       containers:
+       - command:
+         - sleep
+         - "1000"
+         image: busybox
+         name: static-busybox
+         resources: {}
+       dnsPolicy: ClusterFirst
+       restartPolicy: Always
+     status: {}
+     ```
+     </details>
+
+  8. Run below command to create a pod in namespace `finance`:
+
+     <details>
+
+     ```
+     kubectl run temp-bus --image=redis:alpine -n finance
+     ```
+     </details>
+
+  9. Run below command and troubleshoot step by step:
+
+     <details>
+
+     ```
+     kubectl describe pod orange
+     ```
+
+     Export the running pod using below command and correct the spelling of the command **`sleeeep`** to **`sleep`** 
+
+     ```
+     kubectl get pod orange -o yaml > orange.yaml
+     ```
+   
+     Delete the running Orange pod and recreate the pod using command.
+     
+     ```
+     kubectl delete pod orange
+     kubectl create -f orange.yaml
+     ```
+     </details>
+
+  10. Apply below manifests:
+
+      <details>
+
+      ```
+      apiVersion: v1
+      kind: Service
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: hr-web-app
+        name: hr-web-app-service
+      spec:
+        ports:
+        - port: 8080
+          protocol: TCP
+          targetPort: 8080
+          nodePort: 30082
+        selector:
+          app: hr-web-app
+        type: NodePort
+      status:
+        loadBalancer: {}
+      ```
+      </details>
+
+  11. Run the below command to redirect the o/p:
+
+      <details>
+
+      ``` 
+      kubectl get nodes -o jsonpath='{.items[*].status.nodeInfo.osImage}' > /opt/outputs/nodes_os_x43kj56.txt
+      ```
+      </details>
+
+  12. Apply the below manifest to create a PV:
+
+      <details>
+     
+       ```
+       apiVersion: v1
+       kind: PersistentVolume
+       metadata:
+         name: pv-analytics
+       spec:
+         capacity:
+           storage: 100Mi
+         volumeMode: Filesystem
+         accessModes:
+           - ReadWriteMany
+         hostPath:
+             path: /pv/data-analytics
+       ```
+       </details>
+
+<br><br><br>
+
+# Mock Exam 2 Solution
+  
+  
+  1. Run the below command for solution:
+
+     <details>
+
+     ```
+     ETCDCTL_API=3 etcdctl snapshot save --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=127.0.0.1:2379 /opt/etcd-backup.db
+     ```
+     </details>
+
+  2. Run the below command for solution:
+
+     <details>
+ 
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+        creationTimestamp: null
+        labels:
+          run: redis-storage
+        name: redis-storage
+     spec:
+      volumes:
+      - name: redis-storage
+        emptyDir: {}
+      
+      containers:
+      - image: redis:alpine
+        name: redis-storage
+        resources: {}
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data/redis
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+     status: {}
+     ```
+     </details>
+ 
+  3. Run the below command for solution:
+
+     <details>
+
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       creationTimestamp: null
+       name: super-user-pod
+     spec:
+       containers:
+       - image: busybox:1.28
+         name: super-user-pod
+         command: ["sleep", "4800"]
+         securityContext:
+           capabilities:
+             add: ["SYS_TIME"]
+     ```
+     </details>
+
+  4. Run the below command for solution:
+
+     <details>
+     
+     ```
+     apiVersion: v1
+     kind: PersistentVolumeClaim
+     metadata:
+       name: my-pvc
+     spec:
+       accessModes:
+         - ReadWriteOnce
+       resources:
+         requests:
+           storage: 10Mi      
+     ```
+    
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       creationTimestamp: null
+       labels:
+         run: use-pv
+       name: use-pv
+     spec:
+       containers:
+       - image: nginx
+         name: use-pv
+         volumeMounts:
+         - mountPath: "/data"
+           name: mypod
+       volumes:
+       - name: mypod
+         persistentVolumeClaim:
+           claimName: my-pvc
+     ```
+     </details>
+
+  5. Run the below command for solution:
+
+     <details>
+ 
+     For Kubernetes Version <=1.17
+ 
+     ```
+     kubectl run nginx-deploy --image=nginx:1.16 --replicas=1 --record
+     kubectl rollout history deployment nginx-deploy
+     kubectl set image deployment/nginx-deploy nginx=nginx:1.17 --record
+     kubectl rollout history deployment nginx-deploy
+     ```
+ 
+     For Kubernetes Version >1.17
+ 
+     ```
+     kubectl create deployment nginx-deploy --image=nginx:1.16 --dry-run=client -o yaml > deploy.yaml
+   
+     apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: nginx-deploy
+     spec:
+       replicas: 1
+       selector:
+         matchLabels:
+           app: nginx-deploy
+       strategy: {}
+       template:
+         metadata:
+           creationTimestamp: null
+           labels:
+             app: nginx-deploy
+         spec:
+           containers:
+           - image: nginx:1.16
+             name: nginx
+     ```
+     
+     ```
+     kubectl create -f deploy.yaml --record
+     kubectl rollout history deployment nginx-deploy
+     kubectl set image deployment/nginx-deploy nginx=nginx:1.17 --record
+     kubectl rollout history deployment nginx-deploy
+     ```
+     </details>
+  
+  6. Run the below command for solution:
+
+     <details>
+ 
+     ```
+     apiVersion: certificates.k8s.io/v1
+     kind: CertificateSigningRequest
+     metadata:
+       name: john-developer
+     spec:
+       signerName: kubernetes.io/kube-apiserver-client
+       request:  LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZEQ0NBVHdDQVFBd0R6RU5NQXNHQTFVRUF3d0VhbTlvYmpDQ0FTSXdEUVlKS29aSWh 2Y05BUUVCQlFBRApnZ0VQQURDQ0FRb0NnZ0VCQU00cS95V0ozQUt1MW9YYmFSQm1QcnpQOHZZME1MN1VjajFIUTlFd1VtUFRYL09pCmtBMGV3UitJcEd3Wk N0dEd5WjNCd3RPUUNlK0ljdXNPdk9LaGFKVVVPamhuOUk1SGFnUElrb2drNW1sU1VWbmkKUjlRZ3NKYTZmeFpYTVdYR0NkZWo1MTdkWkNRVXZ6RXZ3bWZuY W9iMExNRDlHYWtyVXBuZVByTlZLMEdRTU4rTwppQXRzeU16K1lsYWFKblB3QWlWVlZsU1lWclE1TXo5b1J5TjJoU2VVdnAxZGJLSCtVRTBRK2R3UHkvc2hp TGhxCnI5ZjJQb3I3NHQyeHFRei9hYjhwaFltb29kV3d3UDFzRkNON25OL1hRODU5b3BmNjdnVUFRMEdTNFJmZFoxNnMKRnJkOU5FV2NIRUdLTEJzQ2FmZTB 4OURhNnJrcFZaNXVEMnY1SnZjQ0F3RUFBYUFBTUEwR0NTcUdTSWIzRFFFQgpDd1VBQTRJQkFRQWVTRWZ1bW5VK2tFdXR2QlVuNlBwS0d0MnB1TWUyL0pwRU lFb1liOGlkS2tSa2VjVWxHWE0vCnMwc0hjdDFvcnF2SHVBVktLQ0ozK05hcHU4OFp3a3pLakZFUnZ1M1FOZ3BlMEt0R0gzMGcvY09EQ29XTDIwOXQKSGRsW nNpak40OVZ0dXNCaFRjYWFlaU1uZzVsYWJHTCszcmpla1JyZVpWejVSY1BXNlVOczJudFdVVWQzZnl3SApRTlhMNHYzNkcwbzI5NmVaQStOMmNWZzhlS2tx dXlrcVh1TWpBK2xuQVN1QXU2VGVRNU9yMnRSVnRVSXliZUZ3CnlrR2hDUGkzdEliaEsvRkIrYytWY0JNdnlGb0dpcm8vamVxK2E2aFFLK1VKNHB6SDdNM04 3TW9oT2FvU2VjOEQKTmtnSThYREowbGNYWkJLZXZZZVd3UFhZZzh1cTdkQ0YKLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+       usages:
+       - digital signature
+       - key encipherment
+       - client auth
+       groups:
+       - system:authenticated
+       ```
+ 
+      ```
+      kubectl create role developer --resource=pods --verb=create,list,get,update,delete --namespace=development
+      kubectl create rolebinding developer-role-binding --role=developer --user=john --namespace=development
+      kubectl auth can-i update pods --as=john --namespace=development
+      ```
+  
+     </details>
+ 
+  7. Run the below command for solution:
+
+     <details>
+ 
+     ```
+     kubectl run nginx-resolver --image=nginx
+     kubectl expose pod nginx-resolver --name=nginx-resolver-service --port=80 --target-port=80 --type=ClusterIP
+     kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup nginx-resolver-service
+     kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup nginx-resolver-service > /root/CKA/nginx.svc
+ 
+     Get the IP of the nginx-resolver pod and replace the dots(.) with hyphon(-) which will be used below.
+ 
+     kubectl get pod nginx-resolver -o wide
+     kubectl run test-nslookup --image=busybox:1.28 --rm -it --restart=Never -- nslookup <P-O-D-I-P.default.pod> > /root/CKA/nginx.pod
+ 
+     ```
+ 
+     </details>
+
+  8. Run the below command for solution:
+
+     <details>
+ 
+     ```
+     kubectl run nginx-critical --image=nginx --dry-run=client -o yaml > static.yaml
+     
+     cat static.yaml - Copy the contents of this file.
+ 
+     kubectl get nodes -o wide
+     ssh node01 
+     OR
+     ssh <IP of node01>
+ 
+     Check if static-pod directory is present which is /etc/kubernetes/manifests if not then create it.
+     mkdir -p /etc/kubernetes/manifests
+ 
+     Paste the contents of the file(static.yaml) copied in the first step to file nginx-critical.yaml.
+ 
+     Move/copy the nginx-critical.yaml to path /etc/kubernetes/manifests/
+ 
+     cp nginx-critical.yaml /etc/kubernetes/manifests
+ 
+     Go back to master node
+ 
+     kubectl get pods 
+     ```
+ 
+     </details>
+
+<br><br><br>
+
+# Mock Exam 3 Solution
+
+
+1. Run the below command for solution: 
+
+     <details>
+
+     ```
+     kubectl create serviceaccount pvviewer
+     kubectl create clusterrole pvviewer-role --resource=persistentvolumes --verb=list
+     kubectl create clusterrolebinding pvviewer-role-binding --clusterrole=pvviewer-role --serviceaccount=default:pvviewer
+     ```
+
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       creationTimestamp: null
+       labels:
+         run: pvviewer
+       name: pvviewer
+     spec:
+       containers:
+       - image: redis
+         name: pvviewer
+         resources: {}
+       serviceAccountName: pvviewer
+     ```
+     </details>
+
+2. Run the below command for solution: 
+
+     <details>
+ 
+     ```
+     kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' > /root/CKA/node_ips
+     ```
+     </details>
+ 
+3. Run the below command for solution:  
+ 
+     <details>
+ 
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       name: multi-pod
+     spec:
+       containers:
+       - image: nginx
+         name: alpha
+         env:
+         - name: name
+           value: alpha
+       - image: busybox
+         name: beta
+         command: ["sleep", "4800"]
+         env:
+         - name: name
+           value: beta
+     status: {}
+     ```
+     </details>
+ 
+4. Run the below command for solution:
+ 
+     <details>
+     
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       name: non-root-pod
+     spec:
+       securityContext:
+         runAsUser: 1000
+         fsGroup: 2000
+       containers:
+       - name: non-root-pod
+         image: redis:alpine
+     ```
+     </details>
+ 
+5. Run the below command for solution:  
+ 
+     <details>
+ 
+     ```
+     apiVersion: networking.k8s.io/v1
+     kind: NetworkPolicy
+     metadata:
+       name: ingress-to-nptest
+       namespace: default
+     spec:
+       podSelector:
+         matchLabels:
+           run: np-test-1
+       policyTypes:
+       - Ingress
+       ingress:
+       - ports:
+         - protocol: TCP
+           port: 80
+     ```
+     </details>
+   
+6. Run the below command for solution: 
+ 
+     <details>
+ 
+     ```
+     kubectl taint node node01 env_type=production:NoSchedule
+     ```
+
+     Deploy `dev-redis` pod and to ensure that workloads are not scheduled to this `node01` worker node.
+     ```
+     kubectl run dev-redis --image=redis:alpine
+
+     kubectl get pods -owide
+     ```
+
+     Deploy new pod `prod-redis` with toleration to be scheduled on `node01` worker node.
+     ```
+     apiVersion: v1
+     kind: Pod
+     metadata:
+       name: prod-redis
+     spec:
+       containers:
+       - name: prod-redis
+         image: redis:alpine
+       tolerations:
+       - effect: NoSchedule
+         key: env_type
+         operator: Equal
+         value: production     
+     ```
+
+     View the pods with short details: 
+     ```
+     kubectl get pods -owide | grep prod-redis
+     ```
+     </details>
+ 
+7. Run the below command for solution: 
+ 
+     <details>
+ 
+     ```
+     kubectl create namespace hr
+     kubectl run hr-pod --image=redis:alpine --namespace=hr --labels=environment=production,tier=frontend
+     ```
+     </details>
+
+8. Run the below command for solution:
+
+     <details>
+
+     ```
+     vi /root/CKA/super.kubeconfig
+
+     Change the 2379 port to 6443 and run the below command to verify
+     
+     kubectl cluster-info --kubeconfig=/root/CKA/super.kubeconfig     
+     ```
+     </details>
+
+9. Run the below command for solution:
+   
+     <details>
+     
+     ```
+     sed -i 's/kube-contro1ler-manager/kube-controller-manager/g' kube-controller-manager.yaml
+     ```
+     </details>
+
+<br><br><br>
+
+# --- END --- 
